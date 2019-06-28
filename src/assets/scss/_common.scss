@@ -1,0 +1,217 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+html,body,#app{
+	height: 100%;
+  }
+body{
+background:#14334c;
+}
+.anchorTR,
+.anchorBL{
+display:none;
+}
+
+.clearfix:before,
+.clearfix:after
+{
+  content: " ";
+  display: table;
+}
+.clearfix:after
+ {
+  clear: both;
+}
+.pull-left{
+	float:left;
+}
+.pull-right{
+	float:right;
+}
+
+.box_back {
+	background-color: rgba(12, 48, 84, 0.65);
+	border-radius: 4px;
+	border: 2px solid #4266af;
+}
+.box_back.thin{
+	border: 1px solid #4266af;
+}
+.box_back.b-red{
+	border-color: #FF756A !important;
+}
+.box_back.b-yellow{
+	border-color: #FFD164 !important;
+}
+// .ic-usrname:after{
+// 	width:20px;
+// }
+
+.heluneirong .swiper-pagination-bullet-active {
+    opacity: 1;
+    background: orange !important;
+}
+.heluneirong .swiper-pagination .swiper-pagination-bullet {
+    width: 12px !important;
+    height: 12px !important;
+    display: inline-block;
+    border-radius: 100%;
+
+    background: transparent;
+    border: 2px solid orange;
+    margin: 0 5px;
+}
+.el-input__inner {
+	// color: #fff !important;
+	font-size: 14px !important;
+	&:placeholder {
+		// color: rgba(255, 255, 255, 0.5) !important;
+	}
+}
+
+// .el-select-dropdown {
+// 	// border-color: #3471af !important;
+// 	.el-select-dropdown__list {
+// 		// background: rgb(4,41,71);
+// 		li {
+// 			// background: rgb(4,41,71);
+// 			display: flex;
+// 			align-items: center;
+// 			padding-left: 5px;
+// 			&:hover {
+// 				// background: #011B37;
+// 			}
+// 			span {
+// 				// color: #fff;
+// 			}
+// 		}
+// 	}
+// }
+// .popper__arrow {
+// 	border-bottom: rgb(4,41,71) !important;
+// 	&:after {
+// 		border-bottom-color: rgb(4,41,71) !important;
+// 	}
+// }
+.el-pagination {
+	.el-pagination__total {
+		color: #fff;
+	}
+	button {
+		background: transparent !important;
+		color: #C5D4E3 !important;
+	}
+	button:disabled {
+		color: #C0C4CC;
+	}
+	ul {
+		li {
+			background: transparent !important;
+			border: 1px solid #8CA7C2 !important;
+			line-height: 20px !important;
+			color: #C5D4E3 !important;
+		}
+		.active {
+			background: #E28C3A !important;
+			border: 1px solid #E28C3A !important;
+			color: #333333 !important;
+		}
+	}
+	.el-pagination__jump {
+		color: #fff !important;
+		div {
+			input {
+				color: #fff;
+				background: transparent !important;
+				border: 1px solid #8CA7C2 !important;
+			}
+		}
+	}
+}
+.el-scrollbar__wrap {
+  overflow-x: hidden !important;
+}
+.el-scrollbar__bar {
+	opacity: 1 !important;
+}
+
+.el-select-dropdown__wrap {
+	margin-bottom: 0!important;
+}
+
+.yichangQinwu_wrap[data-v-cf06e8de] .el-input__icon {
+  line-height: 30px !important;
+}
+
+.ellipsis {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.el-cascader:not(.is-disabled):hover .el-input__inner {
+	cursor: pointer;
+	border-color: #409eff !important;
+}
+.common-focus {
+	input {
+		&:focus {
+			border-color: #409eff !important;
+		}
+	}
+}
+
+.el-pagination__editor {
+	.el-input__inner {
+		color: #fff !important;
+	}
+}
