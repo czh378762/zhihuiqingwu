@@ -1,116 +1,109 @@
 <template>
   <div class="yichangQinwu_wrap">
     <div class="top">
-      <div class="top_lf">勤务驾驶未系安全带</div>
+      <div class="top_lf">
+        <img src="../../assets/img/iconImg/data.png" alt>勤务驾驶未系安全带
+      </div>
     </div>
     <div class="content clearfix">
       <div class="c_lf">
         <div class="select_wrap">
           <div class="select">
-            <el-select v-model="value" placeholder="请选择机构">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
+            <el-cascader
+              v-model="selectOrg"
+              :options="orgList"
+              :props="{expandTrigger: 'hover'}"
+              @change="selectOrgChange"
+              placeholder="请选择机构"
+              clearable
+              separator="-"
+              style="width: 100%;">
+            </el-cascader>
           </div>
           <div class="select">
             <el-input
-              placeholder="请输入号牌号码"
-              v-model="value1"
-              clearable>
+              placeholder="请输入车号"
+              v-model="cardNum"
+              class="common-focus"
+              @keyup.enter.native="toSearch">
+              <i 
+                slot="suffix"
+                class="el-input_icon el-icon-search"
+                style="line-height: 30px;margin-right: 2px;cursor: pointer;"
+                @click="toSearch">
+              </i>
             </el-input>
           </div>
         </div>
         <div class="select_wrap" style="margin:10px 0;">
-          <dateTime></dateTime>
+          <dateTime :defaultstart="defaultstart" :defaultend="defaultend" v-model="searchTime" @change="dateChange"></dateTime>
         </div>
         <div class="cont box_back">
-          <tables :tableData="tableData" :tableColumns="tableColumns"></tables>
+          <tables :tableData="tableData" :tableColumns="tableColumns" @change="rowChange"></tables>
           <div class="pageBox" style="margin-bottom: 15px;padding: 0 20px;">
             <el-pagination
               background
               small
-              @current-change="handleCurrentChange11"
-              :current-page="currentPage1"
-              :page-size="8"
-              layout="total, prev, pager, next"
-              :total="400">
+              @current-change="handleCurrentChange"
+              :current-page="currentPage"
+              :page-size="10"
+              layout="total, prev, pager, next, jumper"
+              :total="total">
             </el-pagination>
           </div>
         </div>
       </div>
       <div class="c_rg">
-        <zhuapai></zhuapai>
+        <zhuapai :detailData="activeData"></zhuapai>
       </div>
     </div>
   </div>
 </template>
 <script>
 import tables from "@/components/tables";
-
-// import pagination from "@/components/pagination";
-// import timeSwiper from "@/components/timeSwiper";
 import zhuapai from "@/components/zhiqinzhifajiandu/zhuapai";
 import dateTime from "@/components/dateTime";
+import enforcementService from "@/api/enforcementService";
 
 export default {
   data() {
     return {
-      mjStyle: {
-        padding: "0",
-        height: "390px",
-        "margin-bottom": "0"
-      },
-      tableData: [
-        {
-          carCode: "浙OXXXX警",
-          organization: "杭州支队一大队",
-          time: "2019-05-05 12:12:12",
-          address: "G50沪渝高速K198"
-        },
-        {
-          carCode: "浙OXXXX警",
-          organization: "杭州支队一大队",
-          time: "2019-05-05 12:12:12",
-          address: "G50沪渝高速K198(主线)"
-        },
-        {
-          carCode: "浙OXXXX警",
-          organization: "杭州支队一大队",
-          time: "2019-05-05 12:12:12",
-          address: "G50沪渝高速K198(主线)"
-        }
-      ],
+      selectOrg: "",
+      cardNum: "",
+      defaultstart: "",
+      defaultend: "",
+      searchTime: "",
+      currentPage: 1,
+      total: 0,
+      tableData: [],
       tableColumns: [
         {
           title: "车号",
-          key: "carCode",
-          width: "23%"
+          key: "plateNo",
+          width: "12%"
         },
         {
           title: "机构",
-          key: "organization",
+          key: "orgCodeName",
           width: "23%"
+        },
+        {
+          title: "违法类型",
+          key: "illegalType",
+          width: "20%"
         },
         {
           title: "时间",
-          key: "time",
-          width: "23%"
+          key: "illegalTime",
+          width: "20%"
         },
         {
           title: "地点",
-          key: "address",
-          width: "31%"
+          key: "illegalAddr",
+          width: "25%"
         }
       ],
-      showtype: "shigu",
-      value: null,
-      value1: "",
-      value7: null,
-      options: [{ value: "123", label: "123" }]
+      activeData: {}
     };
   },
   components: {
@@ -118,10 +111,76 @@ export default {
     tables,
     dateTime
   },
+  created() {
+    // 设置默认时间
+    let moment = this.$moment().format("YYYY-MM-DD");
+    this.defaultstart = moment + " 00:00:00";
+    this.defaultend = moment + " 23:59:59";
+    this.searchTime = `${this.defaultstart}&${this.defaultend}`;
+    this.getHarnessList();
+  },
   methods: {
-    changes(value) {
-      if (!value) return;
-      this.showtype = value;
+    // 获取安全带列表
+    getHarnessList() {
+      let timeArr = this.searchTime.split("&");
+      let params = {
+        startRow: (this.currentPage - 1) * 10,
+        endRow: 10,
+        startTime: timeArr[0],
+        endTime: timeArr[1]
+      };
+      if (this.selectOrg) {
+        params.jgbm = this.selectOrg[1];
+      }
+      if (this.cardNum) {
+        params.plateNum = `浙O${this.cardNum}警`;
+      }
+      enforcementService.getHarnessList(params).then(res => {
+        console.log(res);
+        if (res.code === "0") {
+          let data = res.data.safety || [];
+          this.total = res.data.counts || 0;
+          data.forEach(item => {
+            let arr = [];
+            let list = item.carImgUrlList || [];
+            list.forEach(listItem => {
+              if (listItem) {
+                arr.push(listItem);
+              }
+            });
+            item.carImgUrlList = arr;
+          });
+          this.tableData = data;
+          this.activeData = this.tableData[0];
+        } else {
+          this.tableData = [];
+          this.activeData = {};
+        }
+      });
+    },
+    // 机构选择改变
+    selectOrgChange() {
+      this.currentPage = 1;
+      this.getHarnessList();
+    },
+    // 按车号查找
+    toSearch() {
+      this.currentPage = 1;
+      this.getHarnessList();
+    },
+    // 时间改变
+    dateChange() {
+      this.currentPage = 1;
+      this.getHarnessList();
+    },
+    // 页码变化
+    handleCurrentChange(page) {
+      this.currentPage = page;
+      this.getHarnessList();
+    },
+    // 列表点击切换
+    rowChange(item) {
+      this.activeData = item;
     }
   }
 };
@@ -131,23 +190,28 @@ export default {
   height: 100%;
   box-sizing: border-box;
   .top {
-    padding: 30px 0 0 100px;
+    padding: 10px 0 0 86px;
     .top_lf {
-      display: inline-block;
       width: 13%;
       color: #ffcc66;
       font-size: 14px;
       font-weight: 400;
+      display: flex;
+      align-items: center;
+      img {
+        display: block;
+        margin-right: 10px;
+      }
     }
   }
   .content {
     margin-top: 10px;
     padding-left: 86px;
     padding-right: 20px;
-    height: 85%;
+    height: calc(100% - 98px);
     .c_lf {
       float: left;
-      width: 44%;
+      width: 54%;
       height: 100%;
       margin-right: 20px;
       display: flex;
@@ -169,7 +233,7 @@ export default {
     }
     .c_rg {
       float: left;
-      width: calc(56% - 20px);
+      width: calc(46% - 20px);
       display: flex;
       flex-direction: column;
       height: 100%;
@@ -307,5 +371,10 @@ export default {
     color: #ffffff;
     line-height: 20px;
   }
+}
+.pageBox {
+  padding: 0 20px;
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

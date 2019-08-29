@@ -1,123 +1,110 @@
 <template>
   <div class="yichangQinwu_wrap">
     <div class="top">
-      <div class="top_lf">超速</div>
+      <div class="top_lf">
+        <img src="../../assets/img/iconImg/data.png" alt>
+        超速
+      </div>
     </div>
     <div class="content clearfix">
       <div class="c_lf">
         <div class="select_wrap">
           <div class="select">
-            <el-select v-model="value" placeholder="请选择机构">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
+            <el-cascader
+              v-model="selectOrg"
+              :options="orgList"
+              :props="{expandTrigger: 'hover'}"
+              @change="selectOrgChange"
+              placeholder="请选择机构"
+              clearable
+              separator="-"
+              style="width: 100%;">
+            </el-cascader>
           </div>
           <div class="select">
             <el-input
-              placeholder="请输入号牌号码"
-              v-model="value1"
-              clearable>
+              placeholder="请输入车号"
+              v-model="cardNum"
+              class="common-focus"
+              @keyup.enter.native="toSearch">
+              <i 
+                slot="suffix"
+                class="el-input_icon el-icon-search"
+                style="line-height: 30px;margin-right: 2px;cursor: pointer;"
+                @click="toSearch">
+              </i>
             </el-input>
           </div>
         </div>
         <div class="select_wrap" style="margin:10px 0;">
-          <dateTime></dateTime>
+          <dateTime :defaultstart="defaultstart" :defaultend="defaultend" v-model="searchTime" @change="dateChange"></dateTime>
         </div>
         <div class="cont box_back">
-          <tables :tableData="tableData" :tableColumns="tableColumns"></tables>
-          <div class="pageBox" style="margin-bottom: 15px;">
+          <tables :tableData="tableData" :tableColumns="tableColumns" @change="rowChange"></tables>
+          <div class="pageBox">
             <el-pagination
               background
               small
-              @current-change="handleCurrentChange11"
-              :current-page="currentPage1"
-              :page-size="8"
-              layout="total, prev, pager, next"
-              :total="400">
+              @current-change="handleCurrentChange"
+              :current-page="currentPage"
+              :page-size="10"
+              layout="total, prev, pager, next, jumper"
+              :total="total">
             </el-pagination>
           </div>
         </div>
       </div>
       <div class="c_rg">
-        <zhuapai></zhuapai>
+        <zhuapai :detailData="activeData"></zhuapai>
       </div>
     </div>
   </div>
 </template>
 <script>
 import tables from "@/components/tables";
-import dateTime from "@/components/dateTime"
-// import pagination from "@/components/pagination";
-// import timeSwiper from "@/components/timeSwiper";
 import zhuapai from "@/components/zhiqinzhifajiandu/zhuapai";
+import enforcementService from "@/api/enforcementService";
+import dateTime from "@/components/dateTime";
 
 export default {
   data() {
     return {
-      mjStyle: {
-        padding: "0",
-        height: "390px",
-        "margin-bottom": "0"
-      },
-      tableData: [
-        {
-          carCode: "浙OXXXX警",
-          organization: "杭州支队一大队",
-          time: "2019-05-05 12:12:12",
-          address: "G50沪渝高速K198",
-          source: "抓拍"
-        },
-        {
-          carCode: "浙OXXXX警",
-          organization: "杭州支队一大队",
-          time: "2019-05-05 12:12:12",
-          address: "G50沪渝高速K198(主线)",
-          source: "GPS"
-        },
-        {
-          carCode: "浙OXXXX警",
-          organization: "杭州支队一大队",
-          time: "2019-05-05 12:12:12",
-          address: "G50沪渝高速K198(主线)",
-          source: "抓拍"
-        }
-      ],
+      selectOrg: "",
+      cardNum: "",
+      defaultstart: "",
+      defaultend: "",
+      searchTime: "",
+      currentPage: 1,
+      total: 0,
+      tableData: [],
       tableColumns: [
         {
           title: "车号",
-          key: "carCode",
-          width: "20%"
+          key: "plateNo",
+          width: "16%"
         },
         {
           title: "机构",
-          key: "organization",
-          width: "20%"
+          key: "orgCodeName",
+          width: "25%"
         },
         {
           title: "时间",
-          key: "time",
-          width: "20%"
+          key: "illegalTime",
+          width: "25%"
         },
         {
           title: "地点",
-          key: "address",
-          width: "28%"
+          key: "illegalAddr",
+          width: "25%"
         },
         {
           title: "来源",
-          key: "source",
-          width: "12%"
+          key: "Source",
+          width: "9%"
         }
       ],
-      showtype: "shigu",
-      value: null,
-      value1: "",
-      value7: null,
-      options: [{ value: "123", label: "123" }]
+      activeData: {}
     };
   },
   components: {
@@ -125,33 +112,107 @@ export default {
     tables,
     dateTime
   },
+  created() {
+    // 设置默认时间
+    let moment = this.$moment().format("YYYY-MM-DD");
+    this.defaultstart = moment + " 00:00:00";
+    this.defaultend = moment + " 23:59:59";
+    this.searchTime = `${this.defaultstart}&${this.defaultend}`;
+    this.getOverspeedList();
+  },
   methods: {
-    changes(value) {
-      if (!value) return;
-      this.showtype = value;
+    // 获取超速列表
+    getOverspeedList() {
+      let timeArr = this.searchTime.split("&");
+      let params = {
+        startRow: (this.currentPage - 1) * 10,
+        endRow: 10,
+        startTime: timeArr[0],
+        endTime: timeArr[1]
+      };
+      if (this.selectOrg) {
+        params.jgbm = this.selectOrg[1];
+      }
+      if (this.cardNum) {
+        params.plateNum = `浙O${this.cardNum}警`;
+      }
+      enforcementService.getOverspeedList(params).then(res => {
+        console.log(res);
+        if (res.code === "0") {
+          let data = res.data.speed || [];
+          this.total = res.data.counts || 0;
+          data.forEach(item => {
+            let arr = item.carImgUrlList || [];
+            let imgArr = [];
+            arr.forEach(list => {
+              if (list) {
+                imgArr.push(list);
+              }
+            });
+            item.carImgUrlList = imgArr;
+          });
+          console.log(data);
+          this.tableData = data;
+          this.activeData = this.tableData[0] || {};
+        }
+      });
+    },
+    // 选择机构改变
+    selectOrgChange() {
+      this.currentPage = 1;
+      this.getOverspeedList();
+    },
+    // 按车号查找
+    toSearch() {
+      this.currentPage = 1;
+      this.getOverspeedList();
+    },
+    // 时间改变
+    dateChange() {
+      this.currentPage = 1;
+      this.getOverspeedList();
+    },
+    // 页码变化
+    handleCurrentChange(page) {
+      this.currentPage = page;
+      this.getOverspeedList();
+    },
+    // 列表点击切换
+    rowChange(item) {
+      this.activeData = item;
     }
   }
 };
 </script>
 <style lang="scss" scoped>
+.pageBox {
+  padding: 0 20px;
+  display: flex;
+  justify-content: flex-end;
+}
 .yichangQinwu_wrap {
   height: 100%;
   box-sizing: border-box;
   .top {
-    padding: 30px 0 0 100px;
+    padding: 10px 0 0 86px;
     .top_lf {
-      display: inline-block;
       width: 13%;
       color: #ffcc66;
       font-size: 14px;
       font-weight: 400;
+      display: flex;
+      align-items: center;
+      img {
+        display: block;
+        margin-right: 10px;
+      }
     }
   }
   .content {
     margin-top: 10px;
     padding-left: 86px;
     padding-right: 20px;
-    height: 85%;
+    height: calc(100% - 98px);
     .c_lf {
       float: left;
       width: 44%;

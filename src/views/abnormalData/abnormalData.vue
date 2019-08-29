@@ -3,7 +3,7 @@
     <div class="content_wrap box_back">
         <div class="leftTab">
             <ul>
-                <li v-for="(item,ind) in leftMenu" :key="ind" :class="leftMenuInd==ind?'active':''" @click="switchTab(item,ind)">
+                <li v-for="(item,ind) in leftMenu" :key="ind" :class="$route.meta.tabActive === ind ? 'active' : ''" @click="switchTab(item)">
                   <span>{{item.title}}</span>
                 </li>
             </ul>
@@ -29,8 +29,7 @@ export default {
     };
   },
   methods: {
-    switchTab(item, ind) {
-      this.leftMenuInd = ind;
+    switchTab(item) {
       this.$router.push({ path: item.link });
     }
   }
@@ -42,7 +41,7 @@ export default {
   left: 92px;
   right: 92px;
   top: 104px;
-  bottom: 62px;
+  bottom: 64px;
   .content_wrap {
     width: 100%;
     height: 100%;
@@ -53,8 +52,8 @@ export default {
       li {
         width: 147px;
         height: 46px;
-        background: url("../../assets/img/handlebanner/异常左侧未选中@3x.png")
-          no-repeat center center;
+        background: url("../../assets/img/enforcementImg/tabBg.png") no-repeat
+          center center;
         margin-bottom: 15px;
         cursor: pointer;
         span {
@@ -69,7 +68,7 @@ export default {
         }
       }
       .active {
-        background: url("../../assets/img/handlebanner/异常左侧选中@3x.png")
+        background: url("../../assets/img/enforcementImg/tabBg_active.png")
           no-repeat center center;
         span {
           color: #fff;

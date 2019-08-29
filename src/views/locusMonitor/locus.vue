@@ -4,51 +4,65 @@
       <div class="top">
         <div class="lf">
           <div class="switch_item">
-            <span>异常停车</span>
-            <el-switch v-model="value1" active-color="#2ea4da" inactive-color="#999999"></el-switch>
+            <span class="title">异常停车</span>
+            <el-switch v-model="value1" active-color="#2ea4da" inactive-color="#999999" @change="searchChange"></el-switch>
           </div>
           <div class="switch_item">
-            <span>越界巡逻</span>
-            <el-switch v-model="value2" active-color="#2ea4da" inactive-color="#999999"></el-switch>
+            <span class="title">越界巡逻</span>
+            <el-switch v-model="value2" active-color="#2ea4da" inactive-color="#999999" @change="searchChange"></el-switch>
           </div>
           <div class="switch_item">
-            <span>超速行驶</span>
-            <el-switch v-model="value3" active-color="#2ea4da" inactive-color="#999999"></el-switch>
+            <span class="title">超速行驶</span>
+            <el-switch v-model="value3" active-color="#2ea4da" inactive-color="#999999" @change="searchChange"></el-switch>
           </div>
         </div>
       </div>
       <div class="selectTime">
         <div class="timeSelect">
           <el-date-picker
+            class="common-focus"
+            :clearable="false"
+            :editable="false"
             size="small"
             v-model="filterTime"
             type="date"
+            @change="dateChange"
+            value-format="yyyy-MM-dd"
             placeholder="选择日期">
           </el-date-picker>
         </div>
         <div class="rg">
           <div class="switch_item">
             <span>公里桩</span>
-            <el-switch v-model="value4" active-color="#30d8a4" inactive-color="#999999"></el-switch>
+            <el-switch v-model="value4" active-color="#30d8a4" inactive-color="#999999" @change="showHidePiles"></el-switch>
           </div>
         </div>
       </div>
       <div class="select_wrap">
         <div class="select">
-          <el-select v-model="value5" placeholder="请选择机构">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
+          <el-cascader
+            v-model="selectOrg"
+            :options="orgList"
+            :props="{expandTrigger: 'hover'}"
+            @change="selectOrgChange"
+            placeholder="请选择机构"
+            clearable
+            separator="-"
+            style="width: 100%;">
+          </el-cascader>
         </div>
         <div class="select">
           <el-input
-            placeholder="请输入号牌号码"
-            v-model="value6"
-            clearable>
+            placeholder="请输入车号"
+            v-model="card"
+            class="common-focus"
+            @keyup.enter.native="searchByCard">
+            <i 
+              slot="suffix"
+              class="el-input_icon el-icon-search"
+              style="line-height: 30px;margin-right: 2px;cursor: pointer;"
+              @click="searchByCard">
+            </i>
           </el-input>
         </div>
       </div>
@@ -58,28 +72,33 @@
           <span class="line"></span>
           <span class="jg">机构</span>
           <span class="line"></span>
-          <span class="zt">违规</span>
+          <span class="zt">行驶异常</span>
+          <span class="line"></span>
+          <span class="cz">操作</span>
         </div>
         <div class="table_bd">
           <ul>
-            <li :class="index === listActive ? 'active' : ''" v-for="(item, index) in locusData" :key="index" @click="handleClick(item, index)">
-              <span class="ch">{{item.carCode}}</span>
-              <span class="jg">{{item.organization}}</span>
-              <span class="zt">{{item.time}}</span>
+            <li :class="index === listActive ? 'active' : ''" v-for="(item, index) in tableData" :key="index" @click="focusCar(item, index)">
+              <span class="ch ellipsis" :title="item.plateNo">{{item.plateNo}}</span>
+              <span class="jg ellipsis" :title="item.orgCodeName">{{item.orgCodeName}}</span>
+              <span class="zt red ellipsis" :title="item.count">{{item.count}}</span>
+              <span class="cz">
+                <img title="轨迹回放" src="../../assets/img/locusImg/play.png" alt @click="handleClick(item, index)">
+              </span>
             </li>
           </ul>
         </div>
-        <div class="noData" v-if="!locusData.length">暂无数据！</div>
+        <div class="noData" v-if="!tableData.length">暂无数据！</div>
         <div class="pageBox">
           <el-pagination
             background
             small
-            @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage"
-            :page-size="8"
-            layout="total, prev, pager, next"
-            :total="400">
+            :page-size="5"
+            layout="total, prev, pager, next, jumper"
+            :total="totalCount"
+            :pager-count="5">
           </el-pagination>
         </div>
       </div>
@@ -89,70 +108,62 @@
         <div class="out">
           轨迹查询
           <div class="export_btn">
-            <img src="../../assets/导出.png" alt>
-            <span>导出</span>
+            <a :href="exportUrl">
+              <img src="../../assets/img/locusImg/export.png" alt>
+              <span>导出</span>
+            </a>
           </div>
         </div>
-        <div class="close_btn" @click="showDetail = false">x</div>
+        <div class="close_btn el-icon-close" @click="showDetail = false"></div>
       </div>
       <div class="lf">
         <div class="mid">
-          <span>浙O1173</span>
-          <span>杭州支队一大队</span>
-          <el-date-picker
-            v-model="value7"
-            type="datetimerange"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-          ></el-date-picker>
-          <img src="../../assets/搜索.png" alt>
+          <span>{{activeData.plateNo}}</span>
+          <span class="ellipsis" :title="activeData.orgName" style="width: 135px;">{{activeData.orgName}}</span>
+          <div class="timeSelecBox">
+            <dateTime :defaultstart="defaultstart" :defaultend="defaultend" v-model="searchTime" @change="dateTimeChange"></dateTime>
+          </div>
+          <img src="../../assets/img/locusImg/search.png" @click="getLocusDetail(activeData)" alt>
         </div>
         <div class="cont">
           <div class="cl">
             <div class="c_lf">
               <div>
                 <span>起点终点</span>
-                <p>1555 - 1542</p>
+                <p>-</p>
               </div>
               <div>
                 <span>最大车速</span>
-                <p>155km/h</p>
+                <p>{{locusDetail.gps ? locusDetail.gps.maxSpeed : 0}} km/h</p>
               </div>
               <div>
                 <span>累计停车</span>
-                <p>2次 23分56秒</p>
+                <p>{{locusDetail.gps ? locusDetail.gps.tccs : 0}} 次</p>
               </div>
             </div>
             <div class="c_md">
               <div>
                 <span>里程</span>
-                <p>1555km</p>
+                <p>-</p>
               </div>
               <div>
                 <span>均速</span>
-                <p>155km/h</p>
+                <p>-</p>
               </div>
               <div>
                 <span>超速</span>
-                <p>2次</p>
+                <p>{{locusDetail.overspeedCount || 0}}次</p>
               </div>
             </div>
             <div class="c_rg">
-              <ul>
-                <li>
-                  <span class="tit">违规停车</span>
-                  <span class="ct">2019-5-5 10:20:56 9分12秒 1552</span>
-                </li>
-                <li>
-                  <span class="tit">违规停车</span>
-                  <span class="ct">2019-5-5 10:20:56 9分12秒 1552</span>
-                </li>
-                <li>
-                  <span class="tit">违规停车</span>
-                  <span class="ct">2019-5-5 10:20:56 9分12秒 1552</span>
-                </li>
-              </ul>
+              <el-scrollbar style="height: 100%;">
+                <ul>
+                  <li v-for="(item, index) in locusDetail.wfjcList" :key="index">
+                    <span class="tit">{{item.illegalType}}</span>
+                    <span class="ct">{{item.illegalTime}}&nbsp;&nbsp;&nbsp;{{item.speed}}</span>
+                  </li>
+                </ul>
+              </el-scrollbar>
             </div>
           </div>
         </div>
@@ -161,20 +172,20 @@
         <div class="rl">
           <h6>播放速度</h6>
           <div class="speed">
-            <div class="item active">x1</div>
-            <div class="item">x2</div>
-            <div class="item">x4</div>
-            <div class="item">x8</div>
-            <div class="item">x16</div>
+            <div :class="['item', speed === 1 ? 'active' : '']" @click="speed = 1">x1</div>
+            <div :class="['item', speed === 2 ? 'active' : '']" @click="speed = 2">x2</div>
+            <div :class="['item', speed === 4 ? 'active' : '']" @click="speed = 4">x4</div>
+            <div :class="['item', speed === 8 ? 'active' : '']" @click="speed = 8">x8</div>
+            <div :class="['item', speed === 16 ? 'active' : '']" @click="speed = 16">x16</div>
           </div>
           <el-progress :text-inside="true" :stroke-width="18" :percentage="50"></el-progress>
           <div class="cz_btn">
-            <div class="item">
-              <img src="../../assets/播放.png" alt>
+            <div class="item" @click="toPlay">
+              <img src="../../assets/img/locusImg/play.png" alt>
               <span>播放</span>
             </div>
-            <div class="item">
-              <img src="../../assets/回放.png" alt>
+            <div class="item" @click="replay">
+              <img src="../../assets/img/locusImg/replay.png" alt>
               <span>回放</span>
             </div>
           </div>
@@ -186,75 +197,251 @@
             <span>简易事故</span>
             <span>检查核录</span>
           </div>
-          <ul>
-            <li>
-              <span>张三（001130）</span>
-              <span>1</span>
-              <span>1</span>
-              <span>1</span>
-            </li>
-            <li>
-              <span>张三（001130）</span>
-              <span>1</span>
-              <span>1</span>
-              <span>1</span>
-            </li>
-            <li>
-              <span>张三（001130）</span>
-              <span>1</span>
-              <span>1</span>
-              <span>1</span>
-            </li>
-          </ul>
+          <div class="policeList">
+            <el-scrollbar style="height: 100%;">
+              <ul>
+                <li v-for="(item, index) in locusDetail.mjList" :key="index">
+                  <span>{{item.xm}}({{item.police}})</span>
+                  <span>{{item.finEmforCementCount.counts}}</span>
+                  <span>{{item.accidentCount.counts}}</span>
+                  <span>{{item.kkjcCount.counts}}</span>
+                </li>
+              </ul>
+            </el-scrollbar>
+          </div>
         </div>
       </div>
+    </div>
+    <div class="playBox" v-if="showPlay">
+      <polylinePlay ref="playDom" :speed="speed" :polylineData="polylineData" @close="showPlay = false"></polylinePlay>
     </div>
   </div>
 </template>
 <script>
+import locusService from "@/api/locusService";
+import dateTime from "@/components/dateTime";
+import polylinePlay from "@/components/polylinePlay";
 export default {
   name: "current",
   data() {
     return {
       filterTime: "",
+      selectOrg: "",
+      card: "",
       listActive: 0,
-      value1: null,
-      value2: null,
-      value3: null,
-      value4: null,
-      value5: null,
-      value6: null,
-      value7: null,
-      options: [{ value: "123", label: "xyz" }],
+      tableData: [],
+      currentPage: 1,
+      totalCount: 0,
+      value1: true,
+      value2: true,
+      value3: true,
+      value4: false,
       showDetail: true,
-      locusData: [
-        {
-          carCode: "浙OXXXXX警",
-          organization: "杭州支队一大队",
-          time: 1
-        },
-        {
-          carCode: "浙OXXXXX警",
-          organization: "杭州支队一大队",
-          time: 0
-        },
-        {
-          carCode: "浙OXXXXX警",
-          organization: "杭州支队一大队",
-          time: 1
-        }
-      ]
+      activeData: {},
+      locusDetail: {},
+      defaultstart: "",
+      defaultend: "",
+      searchTime: "",
+      polylineData: [],
+      showPlay: false,
+      speed: 1
     };
   },
-  methods: {
-    handleClick(item, index) {
-      this.listActive = index;
-      this.showDetail = true;
+  components: {
+    dateTime,
+    polylinePlay
+  },
+  computed: {
+    exportUrl() {
+      let timeArr = this.searchTime.split("&");
+      return `${
+        process.env.VUE_APP_url
+      }/tblPoliceCarIllegalInfo/export?startTime=${timeArr[0]}&endTime=${
+        timeArr[1]
+      }&plateNo=${this.activeData.plateNo}`;
     }
+  },
+  created() {
+    let moment = "2019-08-02";
+    // let moment = this.$moment().format("YYYY-MM-DD");
+    this.filterTime = moment;
+    this.defaultstart = moment + " 00:00:00";
+    this.defaultend = moment + " 23:59:59";
+    this.searchTime = `${this.defaultstart}&${this.defaultend}`;
+    this.getLocusList();
+  },
+  mounted() {
+    // 监听地图车辆点击
+    this.$eventBus.$on("getLocusInfo", index => {
+      this.showDetail = true;
+      this.defaultstart = this.filterTime + " 00:00:00";
+      this.defaultend = this.filterTime + " 23:59:59";
+      this.searchTime = `${this.defaultstart}&${this.defaultend}`;
+      if (this.listActive === index && this.locusDetail.gps) {
+        return false;
+      }
+      this.listActive = index;
+      this.activeData = this.currentData[index];
+      this.getLocusDetail(this.currentData[index]);
+    });
+  },
+  methods: {
+    // 搜索改变
+    searchChange() {
+      this.currentPage = 1;
+      this.getLocusList();
+    },
+    // 获取轨迹列表
+    getLocusList() {
+      let params = {
+        startTime: `${this.filterTime} 00:00:00`,
+        endTime: `${this.filterTime} 23:59:59`,
+        startRow: (this.currentPage - 1) * 5,
+        endRow: 5
+      };
+      if (this.value1) {
+        params.stopCar = "异常停车";
+      }
+      if (this.value2) {
+        params.crossingPatrol = "越界巡逻";
+      }
+      if (this.value3) {
+        params.speedDing = "超速";
+        params.lowSpeed = "低速";
+      }
+      if (this.card) {
+        params.plateNo = this.card;
+      }
+      if (this.selectOrg[1]) {
+        params.orgCode = this.selectOrg[1];
+      }
+      this.listActive = 0;
+      this.showDetail = false;
+      this.locusDetail = {};
+      locusService.getLocusList(params).then(res => {
+        console.log(res);
+        if (res.code === "0") {
+          this.tableData = res.data.wfjcList || [];
+          this.totalCount = res.data.count || 0;
+          if (res.data.wfjcList[0]) {
+            this.activeData = res.data.wfjcList[0];
+            this.$store.commit("setPantoData", [
+              res.data.wfjcList[0].lon,
+              res.data.wfjcList[0].lat
+            ]);
+          }
+          let arr = [];
+          this.tableData.forEach(item => {
+            arr.push({
+              title: item.plateNo,
+              point: [item.lon, item.lat]
+            });
+          });
+          this.$store.commit("setLocusData", arr);
+        } else {
+          this.tableData = [];
+          this.totalCount = 0;
+        }
+      });
+    },
+    // 获取轨迹详情
+    getLocusDetail(locusData) {
+      let timeArr = this.searchTime.split("&");
+      let params = {
+        startTime: timeArr[0],
+        endTime: timeArr[1],
+        plateNo: locusData.plateNo,
+        gpsId: locusData.plateNo,
+        jgbm: locusData.orgCode
+      };
+      locusService.getLocusDetail(params).then(res => {
+        console.log(res);
+        if (res.code === "0") {
+          let count = 0;
+          res.data.wfjcList.forEach(item => {
+            if (item.illegalType === "超速") {
+              count++;
+            }
+          });
+          res.data.overspeedCount = count;
+          this.locusDetail = res.data || {};
+          if (res.data.gps) {
+            this.$store.commit("setPolylineData", {
+              center: [locusData.lon, locusData.lat],
+              shiji: res.data.gps.gps || [],
+              lilun: res.data.xlGps.GzfwList || []
+            });
+            this.polylineData = res.data.gps.gps;
+          }
+        } else {
+          this.locusDetail = {};
+        }
+      });
+    },
+    // 查找时间改变
+    dateChange(date) {
+      this.getLocusList();
+      this.defaultstart = date + " 00:00:00";
+      this.defaultend = date + " 23:59:59";
+      this.searchTime = `${this.defaultstart}&${this.defaultend}`;
+    },
+    // 选择机构改变
+    selectOrgChange() {
+      this.searchChange();
+    },
+    // 根据车号查询
+    searchByCard() {
+      this.searchChange();
+    },
+    // 页码改变
+    handleCurrentChange(page) {
+      this.currentPage = page;
+      this.getLocusList();
+    },
+    // 列表点击
+    focusCar(item, index) {
+      this.listActive = index;
+      this.activeData = item;
+      this.$store.commit("setPantoData", [item.lon, item.lat]);
+    },
+    // 显示轨迹详情
+    handleClick(item, index) {
+      this.showDetail = true;
+      this.defaultstart = this.filterTime + " 00:00:00";
+      this.defaultend = this.filterTime + " 23:59:59";
+      this.searchTime = `${this.defaultstart}&${this.defaultend}`;
+      if (this.listActive === index && this.locusDetail.gps) {
+        return false;
+      }
+      this.listActive = index;
+      this.getLocusDetail(item);
+    },
+    // 轨迹查询时间改变
+    dateTimeChange() {},
+    // 播放
+    toPlay() {
+      this.showPlay = true;
+    },
+    // 回放
+    replay() {
+      this.$refs.playDom.replay();
+    },
+    // 显示/隐藏公里桩
+    showHidePiles(value) {
+      this.$store.commit("setPileShow", value);
+    }
+  },
+  // 页面销毁清空地图车辆标记和轨迹
+  destroyed() {
+    this.$store.commit("setLocusState", true);
   }
 };
 </script>
 <style lang="scss">
+.el-cascader .el-input .el-input__inner:focus,
+.el-cascader .el-input.is-focus .el-input__inner {
+  border-color: #409eff !important;
+}
 .selectTime {
   width: 100%;
   height: 32px;
@@ -262,22 +449,22 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
-
   .timeSelect {
-    width: 172px;
+    width: 193px;
     .el-date-editor.el-input,
     .el-date-editor.el-input__inner {
       width: 72px;
       background: #042947 !important;
-      border-color: #3471af !important;
+      border-color: #3471af;
     }
     .el-date-editor.el-input {
       .el-input__inner {
         background: #042947 !important;
-        border-color: #3471af !important;
+        border-color: #3471af;
       }
       input {
-        border-color: 2px solid #6a9bff;
+        color: #ffcc66;
+        border: 1px solid #6a9bff;
       }
     }
   }
@@ -292,18 +479,25 @@ export default {
 }
 </style>
 <style lang="scss" scoped>
+.playBox {
+  position: absolute;
+  width: 600px;
+  height: 400px;
+  right: -620px;
+  top: 0;
+}
 .home_wrap {
   position: absolute;
   left: 30px;
   top: 156px;
-  width: 408px;
+  width: 550px;
   height: auto;
   .data_wrap {
     width: 100%;
     .top {
       padding: 0 20px;
       overflow: hidden;
-      margin: 30px 0 15px 0;
+      margin: 16px 0 16px 0;
       .lf {
         display: flex;
         justify-content: space-between;
@@ -311,8 +505,10 @@ export default {
         .switch_item {
           display: flex;
           align-items: center;
-          flex: 1;
           margin-right: 30px;
+          .title {
+            margin-right: 10px;
+          }
           &:last-child {
             margin-right: 0;
           }
@@ -348,12 +544,12 @@ export default {
       justify-content: space-between;
       align-items: center;
       padding: 0 20px;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
       .timeSelect {
-        width: 172px;
+        width: 193px;
         .el-date-editor.el-input,
         .el-date-editor.el-input__inner {
-          width: 172px;
+          width: 193px;
           background: #042947 !important;
         }
         .el-date-editor.el-input {
@@ -361,7 +557,7 @@ export default {
             background: #042947 !important;
           }
           input {
-            border-color: 2px solid #6a9bff;
+            border: 2px solid #6a9bff;
           }
         }
       }
@@ -403,7 +599,10 @@ export default {
       justify-content: space-between;
       padding: 0 20px;
       .select {
-        width: 172px;
+        width: 193px;
+        /deep/ input {
+          color: #ffcc66;
+        }
       }
       /deep/ .el-select {
         width: 100%;
@@ -422,25 +621,31 @@ export default {
     }
   }
   .table_wrap {
+    margin-top: 20px;
     padding: 0 20px;
     .ch {
-      width: 132px;
+      width: 22%;
     }
     .jg {
-      width: 136px;
+      width: 42%;
     }
     .zt {
-      width: 94px;
+      width: 20%;
+    }
+    .cz {
+      flex: 1;
     }
     .table_hd {
       width: 100%;
       height: 32px;
       background: rgba(52, 84, 117, 0.6);
       border-radius: 4px;
-      margin: 10px auto 0;
+      margin-bottom: 6px;
       line-height: 32px;
       display: flex;
       align-items: center;
+      display: flex;
+      border: 1px solid transparent;
       .line {
         display: block;
         width: 1px;
@@ -450,7 +655,6 @@ export default {
       span {
         font-size: 14px;
         color: #11ebff;
-        display: inline-block;
         text-align: center;
         font-family: "Microsoft YaHei";
         font-weight: 400;
@@ -463,11 +667,16 @@ export default {
       li {
         height: 30px;
         width: 100%;
-        margin: 6px auto;
+        margin-bottom: 6px;
         cursor: pointer;
         border: 1px solid transparent;
         display: flex;
         align-items: center;
+        margin-right: 1px;
+        &:last-child {
+          margin-right: 0;
+          margin-bottom: 0;
+        }
         span {
           font-size: 14px;
           font-family: "Microsoft YaHei";
@@ -499,6 +708,9 @@ export default {
         border-radius: 4px;
         span {
           color: rgba(255, 204, 102, 1);
+        }
+        .zt {
+          color: rgba(255, 204, 102, 1) !important;
         }
       }
     }
@@ -566,10 +778,18 @@ export default {
       float: left;
       .mid {
         padding: 0 20px;
+        display: flex;
+        align-items: center;
         img {
           cursor: pointer;
           vertical-align: middle;
           margin-left: 20px;
+        }
+        .timeSelecBox {
+          width: 412px;
+          /deep/ .el-input__inner {
+            color: rgba(255, 204, 102, 1);
+          }
         }
         span {
           font-size: 15px;
@@ -602,10 +822,13 @@ export default {
         padding: 0 20px;
         .cl {
           margin-top: 20px;
+          height: 98px;
+          display: flex;
           .c_lf {
             display: inline-block;
             width: 200px;
-            > div {
+            height: 100%;
+            div {
               margin: 8px 0;
               span {
                 font-size: 13px;
@@ -630,7 +853,8 @@ export default {
           .c_md {
             display: inline-block;
             width: 170px;
-            > div {
+            height: 100%;
+            div {
               margin: 8px 0;
               span {
                 font-size: 13px;
@@ -655,6 +879,7 @@ export default {
           .c_rg {
             display: inline-block;
             width: 300px;
+            height: 100%;
             li {
               margin: 8px 0;
               span {
@@ -678,9 +903,10 @@ export default {
     }
     .rg {
       float: right;
+      display: flex;
       .rl {
         width: 320px;
-        display: inline-block;
+        height: 140px;
         h6 {
           font-size: 14px;
           font-family: "Microsoft YaHei";
@@ -769,8 +995,16 @@ export default {
             }
           }
         }
+        .policeList {
+          width: 100%;
+          height: 124px;
+          overflow: hidden;
+        }
         li {
-          margin-bottom: 15px;
+          margin-bottom: 10px;
+          &:last-child {
+            margin-bottom: 0;
+          }
           span {
             font-size: 14px;
             font-family: "Microsoft YaHei";
@@ -783,6 +1017,7 @@ export default {
             text-align: center;
             &:first-child {
               width: 110px;
+              text-align: left;
             }
           }
         }

@@ -5,35 +5,35 @@
         <p class="title">事故详情</p>
         <div class="content">
           <div class="line">
-            <img src="../../assets/img/minjing/divlines.png" alt>
+            <img src="../../assets/img/iconImg/divlines.png" alt>
           </div>
           <div class="el">
             <i class="ic">
-              <img src="../../assets/img/icon/common.png" alt>
+              <img src="../../assets/img/iconImg/icon07.png" alt>
             </i>
             <span class="info-label">事故时间</span>
-            <span class="infos">{{detailData.sgfssj}}</span>
+            <span class="infos">{{detailData.sgfssj || "暂无数据"}}</span>
           </div>
           <div class="el">
             <i class="ic">
-              <img src="../../assets/img/icon/common.png" alt>
+              <img src="../../assets/img/iconImg/icon06.png" alt>
             </i>
             <span class="info-label">事故地点</span>
-            <span class="infos">{{detailData.sgddms}}</span>
+            <span class="infos">{{detailData.sgddms || "暂无数据"}}</span>
           </div>
           <div class="el">
             <i class="ic">
-              <img src="../../assets/img/icon/common.png" alt>
+              <img src="../../assets/img/iconImg/icon04.png" alt>
             </i>
             <span class="info-label">事故内容</span>
-            <span class="infos">{{detailData.sgss}}</span>
+            <span class="infos">{{detailData.sgss || "暂无数据"}}</span>
           </div>
           <div class="el">
             <i class="ic">
-              <img src="../../assets/img/icon/common.png" alt>
+              <img src="../../assets/img/iconImg/icon04.png" alt>
             </i>
             <span class="info-label">事故责任</span>
-            <span class="infos">{{responsibility}}</span>
+            <span class="infos">{{responsibility || "暂无数据"}}</span>
           </div>
         </div>
       </div>
@@ -42,27 +42,30 @@
         <div class="content">
           <div class="el">
             <i class="ic">
-              <img src="../../assets/img/icon/common.png" alt>
+              <img src="../../assets/img/iconImg/icon04.png" alt>
             </i>
             <span class="infos">-</span>
           </div>
           <div class="el">
             <i class="ic">
-              <img src="../../assets/img/icon/common.png" alt>
+              <img src="../../assets/img/iconImg/icon04.png" alt>
             </i>
             <span class="infos">-</span>
           </div>
           <div class="video-w">
             <div class="v-h">
               <span>执法记录仪</span>
-              <div class="image-wrapper pull-right">
-                <img src="../../assets/img/icon/zoom.png" alt>
-              </div>
             </div>
             <div class="video-content">
-              <div class="image-wrapper">
-                <img src="../../assets/img/minjing/p3.png" alt>
-              </div>
+              <div class="swiper-button-prev"></div>
+              <div class="swiper-button-next"></div>
+              <swiper :options="swiperOption" class="swiper-no-swiping">
+                <swiper-slide :class="'videoSlide' + index" v-for="(item, index) in cVideoData" :key="index">
+                  <!-- <video class="videoWrapper video-js" :id="'videoWrapper' + index" :poster="item.poster">
+                    <source :src="item.src" type="video/mp4">
+                  </video> -->
+                </swiper-slide>
+              </swiper>
             </div>
           </div>
         </div>
@@ -74,13 +77,105 @@
 <script>
 export default {
   name: "illegalcontent",
-  props: ["getStyle", "detailData", "responsibility"],
+  props: ["getStyle", "detailData", "responsibility", "videoData"],
   components: {},
   mouted() {},
   data() {
     return {
-      myStyle: this.getStyle
+      myStyle: this.getStyle,
+      players: [],
+      swiperOption: {
+        effect: "coverflow",
+        grabCursor: true,
+        centeredSlides: true,
+        slidesPerView: "auto",
+        coverflowEffect: {
+          rotate: 0,
+          stretch: 0,
+          depth: 0,
+          modifier: 1,
+          slideShadows: false
+        },
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev"
+        }
+      }
     };
+  },
+  computed: {
+    cVideoData() {
+      if (this.videoData.length) {
+        let arr = [];
+        this.videoData.forEach(item => {
+          let url = item.url;
+          let src;
+          if (url.indexOf(".MOV") !== -1) {
+            src = `${process.env.VUE_APP_url}/FoundVido/zmxz?url=${encodeURI(
+              url
+            )}`;
+          } else {
+            src = url;
+          }
+          arr.push({
+            src: src,
+            poster: item.thumbUrl
+          });
+        });
+        return arr;
+      } else {
+        return [];
+      }
+    }
+  },
+  watch: {
+    cVideoData(newval) {
+      this.disposePlayers();
+      if (newval.length) {
+        this.initPlayer();
+      }
+    }
+  },
+  methods: {
+    // 获取所有已经实例化的player，并销毁
+    disposePlayers() {
+      let allPlayers = this.$video.getPlayers();
+      for (let key in allPlayers) {
+        if (allPlayers[key]) {
+          allPlayers[key].pause();
+          allPlayers[key].dispose();
+        }
+      }
+      this.players = [];
+    },
+    // 初始化播放器
+    initPlayer() {
+      this.$nextTick(() => {
+        this.cVideoData.forEach((item, index) => {
+          // 每组执法记录仪视频个数动态，每次重新实例化的时候先销毁（销毁后video标签会被删除），然后重新创建video标签，重新实例化
+          let html =
+            "<video class='videoWrapper video-js' id='videoDom" +
+            index +
+            "' poster='" +
+            item.poster +
+            "'><source src='" +
+            item.src +
+            "' type='video/mp4'></video>";
+          let videoSlide = document.getElementsByClassName(
+            "videoSlide" + index
+          )[0];
+          videoSlide.innerHTML = html;
+          let options = {
+            width: "228px",
+            height: "128px",
+            controls: true,
+            preload: "auto"
+          };
+          let player = this.$video("videoDom" + index, options);
+          this.players.push(player);
+        });
+      });
+    }
   }
 };
 </script>
@@ -189,8 +284,9 @@ export default {
           }
         }
         .video-w {
-          width: 100%;
+          width: 228px;
           height: 158px;
+          margin: 0 auto;
           .v-h {
             width: 100%;
             height: 30px;
@@ -210,7 +306,35 @@ export default {
           .video-content {
             width: 100%;
             height: calc(100% - 30px);
-            overflow: hidden;
+            position: relative;
+            .videoWrapper {
+              width: 100%;
+              height: 100%;
+            }
+            .swiper-button-prev {
+              top: 50%;
+              left: -60px;
+              width: 50px;
+              height: 50px;
+              margin-top: -25px;
+              background-color: #14334c;
+              background: url("../../assets/img/iconImg/la.png") no-repeat
+                center;
+            }
+            .swiper-button-next {
+              top: 50%;
+              right: -60px;
+              width: 50px;
+              height: 50px;
+              margin-top: -25px;
+              background-color: #14334c;
+              background: url("../../assets/img/iconImg/ra.png") no-repeat
+                center;
+            }
+            .swiper-container {
+              width: 100%;
+              height: 100%;
+            }
           }
         }
       }

@@ -18,9 +18,7 @@ export default {
     handlebanner
   },
   data() {
-    return {
-      title: "车辆运行轨迹"
-    };
+    return {};
   }
 };
 </script>
@@ -30,6 +28,13 @@ export default {
   height: 100%;
   width: 100%;
   // overflow: hidden;
+  .allmap {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
 }
 * {
   box-sizing: border-box;

@@ -4,151 +4,150 @@
       <h6 style="margin-bottom:20px;">事故详情</h6>
       <div class="el flex">
         <div class="info flex-align-top flex flex-align-center">
-          <img class="ic" src="../assets/img/icon/time.png" alt>
+          <img class="ic" src="../assets/img/iconImg/icon07.png" alt>
           <span class="info-label">事故时间</span>
         </div>
-        <span class="infos">2019-5-5 05:26</span>
+        <span class="infos">{{detailData.sgfssj || "暂无数据"}}</span>
       </div>
       <div class="el flex">
         <div class="info flex-align-top flex flex-align-center">
-          <img class="ic" src="../assets/img/icon/local.png" alt>
+          <img class="ic" src="../assets/img/iconImg/icon06.png" alt>
           <span class="info-label">事故地点</span>
         </div>
-        <span class="infos">G50沪渝高速K198(主线)</span>
+        <span class="infos">{{detailData.sgddms || "暂无数据"}}</span>
       </div>
       <div class="el flex">
         <div class="info flex-align-top flex flex-align-center">
-          <img class="ic" src="../assets/img/icon/common.png" alt>
+          <img class="ic" src="../assets/img/iconImg/icon04.png" alt>
           <span class="info-label">事故内容</span>
         </div>
-        <span class="infos">位于泸定县城南面17公里处的 杵坭乡</span>
+        <span class="infos">{{detailData.sgss || "暂无数据"}}</span>
       </div>
       <div class="el flex">
         <div class="info flex-align-top flex flex-align-center">
-          <img class="ic" src="../assets/img/icon/common.png" alt>
+          <img class="ic" src="../assets/img/iconImg/icon04.png" alt>
           <span class="info-label">事故责任</span>
         </div>
-        <span class="infos">于泸定县城南面17公里处的</span>
+        <span class="infos">{{relativeCarList.length ? relativeCarList[0].sgzr : "暂无数据"}}</span>
       </div>
     </div>
     <div class="rg flex1">
       <div class="box_back">
         <div class="left_box">
           <ul>
-            <li class="active">浙H8C23</li>
-            <li>浙H8C23</li>
-            <li>浙H8C23</li>
-            <li>浙H8C23</li>
+            <li v-for="(item, index) in relativeCarList" :key="index" :class="activeIndex === index ? 'active' : ''" @click="selectCar(item, index)">
+              {{item.hphm}}
+            </li>
           </ul>
         </div>
         <div class="rg_cont flex">
           <div class="cont_lf">
-            <div class="el">
+            <div class="el" style="display: block;">
               <div class="flex">
-                <div class="info flex flex-align-center">
-                  <img class="ic" src="../assets/img/icon/haopaihaoma.png" alt>
+                <div class="info flex flex-align-top">
+                  <img class="ic" src="../assets/img/iconImg/icon03.png" alt>
                   <span class="info-label">号牌号码</span>
                 </div>
-                <span class="infos">无数据</span>
+                <span class="infos">{{activeData.hphm || "暂无数据"}}</span>
               </div>
-              <img style="margin:4px 0 0 30px;" src="../assets/img/minjing/card-pic.png" alt>
+              <img style="margin:4px 0 0 30px;" src="../assets/img/iconImg/card-pic.png" alt>
             </div>
             <div class="el flex">
-              <div class="info flex flex-align-center">
-                <img class="ic" src="../assets/img/icon/carstatus.png" alt>
+              <div class="info flex flex-align-top">
+                <img class="ic" src="../assets/img/iconImg/icon02.png" alt>
                 <span class="info-label">车辆状态</span>
               </div>
-              <span class="infos">无数据</span>
+              <span class="infos">{{activeData.clzt || "暂无数据"}}</span>
             </div>
             <div class="el flex">
-              <div class="info flex flex-align-center">
-                <img class="ic" src="../assets/img/icon/time.png" alt>
+              <div class="info flex flex-align-top">
+                <img class="ic" src="../assets/img/iconImg/icon07.png" alt>
                 <span class="info-label">年审期限</span>
               </div>
-              <span class="infos">无数据</span>
+              <span class="infos">{{activeData.yxqz || "暂无数据"}}</span>
             </div>
             <div class="el flex">
-              <div class="info flex flex-align-center">
-                <img class="ic" src="../assets/img/icon/common.png" alt>
+              <div class="info flex flex-align-top">
+                <img class="ic" src="../assets/img/iconImg/icon04.png" alt>
                 <span class="info-label">号牌种类</span>
               </div>
-              <span class="infos">无数据</span>
+              <span class="infos">{{activeData.hpzl || "暂无数据"}}</span>
             </div>
             <div class="el flex">
-              <div class="info flex flex-align-center">
-                <img class="ic" src="../assets/img/icon/common.png" alt>
+              <div class="info flex flex-align-top">
+                <img class="ic" src="../assets/img/iconImg/icon04.png" alt>
                 <span class="info-label">车身颜色</span>
               </div>
-              <span class="infos">无数据</span>
+              <span class="infos">{{activeData.csys || "暂无数据"}}</span>
             </div>
             <div class="el flex">
-              <div class="info flex flex-align-center">
-                <img class="ic" src="../assets/img/icon/common.png" alt>
+              <div class="info flex flex-align-top">
+                <img class="ic" src="../assets/img/iconImg/icon04.png" alt>
                 <span class="info-label">车辆类型</span>
               </div>
-              <span class="infos">无数据</span>
+              <span class="infos">{{activeData.cllx || "暂无数据"}}</span>
             </div>
             <div class="el flex">
-              <div class="info flex flex-align-center">
-                <img class="ic" src="../assets/img/icon/common.png" alt>
-                <span class="info-label">车辆平台</span>
+              <div class="info flex flex-align-top">
+                <img class="ic" src="../assets/img/iconImg/icon04.png" alt>
+                <span class="info-label">车辆品牌</span>
               </div>
-              <span class="infos">无数据</span>
+              <span class="infos">{{activeData.clpp1 || "暂无数据"}}</span>
             </div>
           </div>
           <div class="cont_rg flex1">
             <h6>当事人</h6>
             <div class="ds flex flex-align-center">
-              <img src="../assets/img/minjing/p2.png" alt>
+              <img src="../assets/img/iconImg/p2.png" alt>
               <div class="ds_cont flex1">
                 <div class="el flex">
-                  <div class="info flex flex-align-center">
-                    <img class="ic" src="../assets/img/icon/usrname.png" alt>
+                  <div class="info flex flex-align-center flex-align-top">
+                    <img class="ic" src="../assets/img/iconImg/icon12.png" alt>
                     <span class="info-label">当事人</span>
                   </div>
-                  <span class="infos">无数据</span>
+                  <span class="infos">{{activeData.xm || "暂无数据"}}</span>
                 </div>
                 <div class="el flex">
-                  <div class="info flex flex-align-center">
-                    <img class="ic" src="../assets/img/icon/idcard.png" alt>
+                  <div class="info flex flex-align-center flex-align-top">
+                    <img class="ic" src="../assets/img/iconImg/icon09.png" alt>
                     <span class="info-label">身份证号码</span>
                   </div>
-                  <span class="infos">无数据</span>
+                  <span class="infos">{{activeData.sfzh || "暂无数据"}}</span>
                 </div>
                 <div class="el flex">
-                  <div class="info flex flex-align-center">
-                    <img class="ic" src="../assets/img/icon/tel2.png" alt>
+                  <div class="info flex flex-align-center flex-align-top">
+                    <img class="ic" src="../assets/img/iconImg/icon08.png" alt>
                     <span class="info-label">联系方式</span>
                   </div>
-                  <span class="infos">无数据</span>
+                  <span class="infos">{{activeData.lxdh || "暂无数据"}}</span>
                 </div>
                 <div class="el flex">
-                  <div class="info flex flex-align-center">
-                    <img class="ic" src="../assets/img/icon/cardnumber.png" alt>
+                  <div class="info flex flex-align-center flex-align-top">
+                    <img class="ic" src="../assets/img/iconImg/icon01.png" alt>
                     <span class="info-label">驾驶证档案编号</span>
                   </div>
-                  <span class="infos">无数据</span>
+                  <span class="infos">{{activeData.dabh || "暂无数据"}}</span>
                 </div>
                 <div class="el flex">
-                  <div class="info flex flex-align-center">
-                    <img class="ic" src="../assets/img/icon/carnum.png" alt>
+                  <div class="info flex flex-align-center flex-align-top">
+                    <img class="ic" src="../assets/img/iconImg/icon13.png" alt>
                     <span class="info-label">准驾车型</span>
                   </div>
-                  <span class="infos">无数据</span>
+                  <span class="infos">{{activeData.zjcx || "暂无数据"}}</span>
                 </div>
                 <div class="el flex">
-                  <div class="info flex flex-align-center">
-                    <img class="ic" src="../assets/img/icon/time.png" alt>
+                  <div class="info flex flex-align-center flex-align-top">
+                    <img class="ic" src="../assets/img/iconImg/icon05.png" alt>
                     <span class="info-label">计分情况</span>
                   </div>
-                  <span class="infos">无数据</span>
+                  <span class="infos">-</span>
                 </div>
               </div>
             </div>
             <h6 style="margin:10px 0;">关联违法</h6>
-            <div class="detail flex flex-align-center">
-              <img style="margin-right:10px;" src="../assets/img/icon/common.png" alt>
-              <span class="infos">春赏花、秋品果、冬沐阳，一年四季都是旅游旺季。</span>
+            <div class="detail flex flex-align-center flex-align-top">
+              <img style="margin-right:10px;" src="../assets/img/iconImg/icon04.png" alt>
+              <span class="infos">-</span>
             </div>
           </div>
         </div>
@@ -160,9 +159,38 @@
 <script>
 export default {
   name: "feiqinwushigu",
+  props: {
+    detailData: {
+      default: () => {
+        return {};
+      }
+    },
+    relativeCarList: {
+      default: () => {
+        return {};
+      }
+    }
+  },
   components: {},
   data() {
-    return {};
+    return {
+      activeIndex: 0
+    };
+  },
+  computed: {
+    activeData() {
+      if (this.relativeCarList.length) {
+        return this.relativeCarList[this.activeIndex];
+      } else {
+        return {};
+      }
+    }
+  },
+  methods: {
+    selectCar(item, index) {
+      this.activeIndex = index;
+      this.carDetail = item;
+    }
   }
 };
 </script>
@@ -174,20 +202,35 @@ export default {
   h6 {
     font-size: 14px;
     color: #ffcc66;
+    margin-bottom: 4px;
   }
   .lf {
     width: 310px;
     .info {
-      min-width: 130px;
+      width: 100px;
     }
   }
   .el {
     margin-bottom: 8px;
+    display: flex;
+    img {
+      display: block;
+    }
+    .info {
+      line-height: 18px;
+      font-size: 14px;
+      color: #03d8ea;
+      margin-left: 14px;
+    }
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
   .infos {
+    flex: 1;
     font-size: 14px;
     color: #ffffff;
-    line-height: 22px;
+    line-height: 18px;
   }
   .ic {
     margin-right: 10px;
@@ -204,9 +247,10 @@ export default {
       position: relative;
       .left_box {
         position: absolute;
-        left: -22px;
-        top: 40px;
+        left: -40px;
+        top: 50%;
         width: 80px;
+        transform: translateY(-50%);
         li {
           height: 28px;
           line-height: 28px;
@@ -238,21 +282,22 @@ export default {
         }
       }
       .rg_cont {
-        margin-left: 60px;
         padding: 20px;
+        padding-left: 40px;
         .cont_lf {
           .info {
             min-width: 100px;
           }
         }
         .cont_rg {
-          margin-left: 30px;
+          margin-left: 10px;
           padding-left: 10px;
           .ds {
             border-bottom: solid 1px #366492;
+            padding-bottom: 10px;
           }
           .ds_cont {
-            margin-left: 20px;
+            margin-left: 10px;
             .info {
               width: 130px;
             }

@@ -9,94 +9,94 @@
           <el-col :span="12" style="margin-bottom: 15px;">
             <div class="el">
               <i class="ic">
-                <img src="../../assets/img/icon/haopaihaoma.png" alt>
+                <img src="../../assets/img/iconImg/icon03.png" alt>
               </i>
               <span class="info-label">号牌号码</span>
-              <span class="infos">{{detailData.hphm}}</span>
+              <span class="infos">{{detailData.hphm || "暂无数据"}}</span>
             </div>
             <div class="el" style="height: 27px;">
-              <div class="image-wrapper carnum-pic">
-                <img src="../../assets/img/minjing/card-pic.png" alt>
+              <div class="cardBox">
+                <card :platNum="detailData.hphm"></card>
               </div>
             </div>
             <div class="el">
               <i class="ic">
-                <img src="../../assets/img/icon/carstatus.png" alt>
+                <img src="../../assets/img/iconImg/icon02.png" alt>
               </i>
               <span class="info-label">车辆状态</span>
-              <span class="infos">{{detailData.clzt}}</span>
+              <span class="infos">{{detailData.clzt || "暂无数据"}}</span>
             </div>
             <div class="el" style="margin-bottom: 15px;">
               <i class="ic">
-                <img src="../../assets/img/icon/time.png" alt>
+                <img src="../../assets/img/iconImg/icon07.png" alt>
               </i>
               <span class="info-label">年审期限</span>
-              <span class="infos">-</span>
+              <span class="infos">{{detailData.yxqz || "暂无数据"}}</span>
             </div>
           </el-col>
           <el-col :span="12">
             <div class="el">
               <i class="ic">
-                <img src="../../assets/img/icon/common.png" alt>
+                <img src="../../assets/img/iconImg/icon04.png" alt>
               </i>
               <span class="info-label">号牌种类</span>
-              <span class="infos">{{detailData.hpzl}}</span>
+              <span class="infos">{{detailData.hpzl || "暂无数据"}}</span>
             </div>
             <div class="el" style="height: 27px;">
               <i class="ic">
-                <img src="../../assets/img/icon/common.png" alt>
+                <img src="../../assets/img/iconImg/icon04.png" alt>
               </i>
               <span class="info-label">车身颜色</span>
-              <span class="infos">-</span>
+              <span class="infos">{{detailData.csys || "暂无数据"}}</span>
             </div>
             <div class="el">
               <i class="ic">
-                <img src="../../assets/img/icon/common.png" alt>
+                <img src="../../assets/img/iconImg/icon04.png" alt>
               </i>
               <span class="info-label">车辆类型</span>
-              <span class="infos">{{detailData.clfl|| detailData.hpzl}}</span>
+              <span class="infos">{{detailData.cllx || "暂无数据"}}</span>
             </div>
             <div class="el">
               <i class="ic">
-                <img src="../../assets/img/icon/common.png" alt>
+                <img src="../../assets/img/iconImg/icon04.png" alt>
               </i>
               <span class="info-label">车辆品牌</span>
-              <span class="infos">-</span>
+              <span class="infos">{{detailData.clpp1 || "暂无数据"}}</span>
             </div>
           </el-col>
         </el-row>
       </div>
       <div class="image-wrapper divline-pic">
-        <img src="../../assets/img/minjing/divline.png" alt>
+        <img src="../../assets/img/iconImg/divline.png" alt>
       </div>
       <div class="details">
         <div class="el">
           <i class="ic">
-            <img src="../../assets/img/icon/usrname.png" alt>
+            <img src="../../assets/img/iconImg/icon12.png" alt>
           </i>
           <span class="info-label">车辆所有人</span>
-          <span class="infos" style="flex: none; margin-right: 10px;">{{detailData.jdcsyr || detailData.syr}}</span>
+          <span class="infos" style="flex: none; margin-right: 10px;">{{detailData.syr || "暂无数据"}}</span>
           <!-- <i class="ic">
             <img src="../../assets/img/icon/boy.png" alt>
           </i> -->
         </div>
         <div class="el">
           <i class="ic">
-            <img src="../../assets/img/icon/idcard.png" alt>
+            <img src="../../assets/img/iconImg/icon09.png" alt>
           </i>
           <span class="info-label">身份证号码</span>
           <span class="infos">-</span>
         </div>
-        <div class="el">
+        <!-- <div class="el">
           <i class="ic">
-            <img src="../../assets/img/icon/tel.png" alt>
+            <img src="../../assets/img/iconImg/icon10.png" alt>
           </i>
           <span class="info-label">手机号码</span>
           <span class="infos">-</span>
-        </div>
+        </div> -->
         <div class="el">
           <i class="ic">
-            <img src="../../assets/img/icon/tel2.png" alt>
+            <img src="../../assets/img/iconImg/icon08.png" alt>
           </i>
           <span class="info-label">联系方式</span>
           <span class="infos">-</span>
@@ -106,15 +106,25 @@
   </div>
 </template>
 <script>
+import card from "@/components/card";
 export default {
   name: "carinitem",
   props: ["getStyle", "detailData"],
-  components: {},
-  mouted() {},
+  components: { card },
   data() {
     return {
       myStyle: this.getStyle
     };
+  },
+  filters: {
+    timeFormatter(time) {
+      if (time) {
+        let date = new Date(time);
+        return this.$moment(date).format("YYYY-MM-DD");
+      } else {
+        return "-";
+      }
+    }
   }
 };
 </script>
@@ -167,6 +177,10 @@ export default {
   height: 18px;
   display: flex;
   align-items: center;
+  .cardBox {
+    width: 138px;
+    height: 27px;
+  }
   img {
     display: block;
   }

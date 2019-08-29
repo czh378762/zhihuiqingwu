@@ -1,5 +1,6 @@
 <template>
   <div class="box-wp box_back cardselect thin b-red" v-bind:style="myStyle">
+    <div class="imagewrapper"></div>
     <div class="btn-wp">
       <button
         type="button"
@@ -12,66 +13,66 @@
       </button>
     </div>
     <el-row class="detail_content">
-      <el-col :span="13" class="car_detail">
+      <el-col :span="14" class="car_detail">
         <div class="box-content">
           <div class="clearfix main-info" style="margin-bottom:30px;">
             <el-row :gutter="10">
               <el-col :span="10">
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/haopaihaoma.png" alt>
+                    <img src="../../assets/img/iconImg/icon03.png" alt>
                   </i>
                   <span class="info-label">号牌号码</span>
-                  <span class="infos">{{activeData.hphm}}</span>
+                  <span class="infos">{{activeData.hphm || "暂无数据"}}</span>
                 </div>
                 <div class="el" style="margin-bottom: 15px;">
-                  <div class="image-wrapper carnum-pic">
-                    <img src="../../assets/img/minjing/card-pic.png" alt>
+                  <div class="cardBox">
+                    <card :platNum="activeData.hphm"></card>
                   </div>
                 </div>
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/carstatus.png" alt>
+                    <img src="../../assets/img/iconImg/icon02.png" alt>
                   </i>
                   <span class="info-label">车辆状态</span>
-                  <span class="infos">-</span>
+                  <span class="infos">{{activeData.clzt || "暂无数据"}}</span>
                 </div>
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/time.png" alt>
+                    <img src="../../assets/img/iconImg/icon07.png" alt>
                   </i>
                   <span class="info-label">年审期限</span>
-                  <span class="infos">-</span>
+                  <span class="infos">{{activeData.yxqz || "暂无数据"}}</span>
                 </div>
               </el-col>
               <el-col :span="14">
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/common.png" alt>
+                    <img src="../../assets/img/iconImg/icon04.png" alt>
                   </i>
                   <span class="info-label">号牌种类</span>
-                  <span class="infos">{{activeData.hpzl}}</span>
+                  <span class="infos">{{activeData.hpzl || "暂无数据"}}</span>
                 </div>
                 <div class="el" style="height: 27px; align-items: center;">
                   <i class="ic">
-                    <img src="../../assets/img/icon/common.png" alt>
+                    <img src="../../assets/img/iconImg/icon04.png" alt>
                   </i>
                   <span class="info-label">车身颜色</span>
-                  <span class="infos">{{activeData.csys}}</span>
+                  <span class="infos">{{activeData.csys || "暂无数据"}}</span>
                 </div>
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/common.png" alt>
+                    <img src="../../assets/img/iconImg/icon04.png" alt>
                   </i>
                   <span class="info-label">车辆类型</span>
-                  <span class="infos">{{activeData.cllx}}</span>
+                  <span class="infos">{{activeData.cllx || "暂无数据"}}</span>
                 </div>
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/common.png" alt>
+                    <img src="../../assets/img/iconImg/icon04.png" alt>
                   </i>
                   <span class="info-label">车辆品牌</span>
-                  <span class="infos">{{activeData.clpp}}</span>
+                  <span class="infos">{{activeData.clpp1 || "暂无数据"}}</span>
                 </div>
               </el-col>
             </el-row>
@@ -82,31 +83,31 @@
               <el-col :span="24">
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/usrname.png" alt>
+                    <img src="../../assets/img/iconImg/icon12.png" alt>
                   </i>
                   <span class="info-label">车辆所有人</span>
-                  <span class="infos">{{activeData.syr}}</span>
+                  <span class="infos">{{activeData.syr || "暂无数据"}}</span>
                   <!-- <i class="ic">
                     <img src="../../assets/img/icon/boy.png" alt>
                   </i> -->
                 </div>
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/idcard.png" alt>
+                    <img src="../../assets/img/iconImg/icon09.png" alt>
                   </i>
                   <span class="info-label">身份证号码</span>
                   <span class="infos">-</span>
                 </div>
-                <div class="el">
+                <!-- <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/tel.png" alt>
+                    <img src="../../assets/img/iconImg/icon10.png" alt>
                   </i>
                   <span class="info-label">手机号码</span>
                   <span class="infos">-</span>
-                </div>
+                </div> -->
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/tel2.png" alt>
+                    <img src="../../assets/img/iconImg/icon08.png" alt>
                   </i>
                   <span class="info-label">联系方式</span>
                   <span class="infos">-</span>
@@ -116,20 +117,14 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="11" class="people_detail">
+      <el-col :span="10" class="people_detail">
         <div class="box-content">
-          <div
-            class="imagewrapper"
-            style="position: absolute;left: 53%;top: -2px;height: 340px;overflow: hidden;"
-          >
-            <img src="../../assets/img/minjing/divlines.png" alt>
-          </div>
           <div class="clearfix main-info">
             <el-row>
               <el-col :span="24">
                 <div class="dangshiren-pic">
                   <div class="image-wrapper">
-                    <img src="../../assets/img/minjing/p2.png" alt>
+                    <img src="../../assets/img/iconImg/p2.png" alt>
                   </div>
                 </div>
               </el-col>
@@ -138,48 +133,48 @@
           <div class="others">
             <div class="el">
               <i class="ic">
-                <img src="../../assets/img/icon/usrname.png" alt>
+                <img src="../../assets/img/iconImg/icon12.png" alt>
               </i>
               <span class="info-label">当事人</span>
-              <span class="infos" style="flex: none;margin-right: 10px;">{{activeData.xm}}</span>
+              <span class="infos" style="flex: none;margin-right: 10px;">{{activeData.xm || "暂无数据"}}</span>
               <!-- <i class="ic">
                 <img src="../../assets/img/icon/girl.png" alt>
               </i> -->
             </div>
             <div class="el">
               <i class="ic">
-                <img src="../../assets/img/icon/idcard.png" alt>
+                <img src="../../assets/img/iconImg/icon09.png" alt>
               </i>
               <span class="info-label">身份证号码</span>
-              <span class="infos">{{activeData.sfzh}}</span>
+              <span class="infos">{{activeData.sfzh || "暂无数据"}}</span>
             </div>
             <div class="el">
               <i class="ic">
-                <img src="../../assets/img/icon/tel2.png" alt>
+                <img src="../../assets/img/iconImg/icon08.png" alt>
               </i>
               <span class="info-label">联系方式</span>
-              <span class="infos">{{activeData.lxdh}}</span>
+              <span class="infos">{{activeData.lxdh || "暂无数据"}}</span>
             </div>
             <div class="el">
               <i class="ic">
-                <img src="../../assets/img/icon/cardnumber.png" alt>
+                <img src="../../assets/img/iconImg/icon01.png" alt>
               </i>
               <span class="info-label">驾驶证档案编号</span>
-              <span class="infos">-</span>
+              <span class="infos">{{activeData.dabh || "暂无数据"}}</span>
             </div>
             <div class="el">
               <i class="ic">
-                <img src="../../assets/img/icon/haopaihaoma.png" alt>
+                <img src="../../assets/img/iconImg/icon13.png" alt>
               </i>
               <span class="info-label">准驾车型</span>
-              <span class="infos">{{activeData.zjcx}}</span>
+              <span class="infos">{{activeData.zjcx || "暂无数据"}}</span>
             </div>
             <div class="el">
               <i class="ic">
-                <img src="../../assets/img/icon/time.png" alt>
+                <img src="../../assets/img/iconImg/icon05.png" alt>
               </i>
-              <span class="info-label">积分情况</span>
-              <span class="infos">-</span>
+              <span class="info-label">计分情况</span>
+              <span class="infos">{{activeData.kffz || "暂无数据"}}</span>
             </div>
           </div>
         </div>
@@ -188,10 +183,11 @@
   </div>
 </template>
 <script>
+import card from "@/components/card";
 export default {
   name: "cardselect",
   props: ["getStyle", "accidentDetail"],
-  components: {},
+  components: { card },
   mouted() {},
   data() {
     return {
@@ -218,7 +214,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .activeBtn {
-  background: url("../../assets/img/minjing/btseled.png") no-repeat center;
+  background: url("../../assets/img/iconImg/btseled.png") no-repeat center;
   background-size: 200px !important;
 }
 .btn-wp span {
@@ -246,7 +242,7 @@ export default {
 }
 .m-b:hover,
 .activeBtn {
-  background: url("../../assets/img/minjing/btseled.png") no-repeat center;
+  background: url("../../assets/img/iconImg/btseled.png") no-repeat center;
   background-size: 200px !important;
 }
 .cardselect {
@@ -304,6 +300,10 @@ export default {
 .el {
   margin-bottom: 15px;
   display: flex;
+  .cardBox {
+    width: 138px;
+    height: 27px;
+  }
   img {
     display: block;
   }
@@ -361,5 +361,16 @@ export default {
     align-items: center;
     margin-bottom: 0;
   }
+}
+.imagewrapper {
+  position: absolute;
+  left: 58.33%;
+  top: 0;
+  height: 340px;
+  overflow: hidden;
+  // transform: translateY(-50%);
+  width: 1px;
+  height: 100%;
+  background: url(../../assets/img/iconImg/divlines.png);
 }
 </style>

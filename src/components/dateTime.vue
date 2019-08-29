@@ -65,6 +65,13 @@ export default {
       handler(newval) {
         this.endTime = newval;
       }
+    },
+    value(val) {
+      if (val) {
+        let time = val.split("&");
+        this.startTime = time[0];
+        this.endTime = time[1];
+      }
     }
   },
   computed: {
@@ -100,7 +107,7 @@ export default {
     // 开始时间改变
     startChange(value) {
       this.$emit("input", value + "&" + this.endTime);
-      this.$emit("change", value + "&" + this.endTime)
+      this.$emit("change", value + "&" + this.endTime);
     },
     // 结束时间改变
     endChange(value) {
@@ -136,7 +143,7 @@ export default {
     width: 8px;
     height: 1px;
     background: #308eba;
-    margin: 0 4px;
+    margin: 0 6px;
   }
 }
 </style>

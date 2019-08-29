@@ -5,21 +5,21 @@
         <div class="lf">
           <div class="switch_item">
             <span>异常停车</span>
-            <el-switch v-model="value1" active-color="#2ea4da" inactive-color="#999999"></el-switch>
+            <el-switch v-model="value1" active-color="#2ea4da" inactive-color="#999999" @change="searchChange"></el-switch>
           </div>
           <div class="switch_item">
             <span>越界巡逻</span>
-            <el-switch v-model="value2" active-color="#2ea4da" inactive-color="#999999"></el-switch>
+            <el-switch v-model="value2" active-color="#2ea4da" inactive-color="#999999" @change="searchChange"></el-switch>
           </div>
           <div class="switch_item">
             <span>超速行驶</span>
-            <el-switch v-model="value3" active-color="#2ea4da" inactive-color="#999999"></el-switch>
+            <el-switch v-model="value3" active-color="#2ea4da" inactive-color="#999999" @change="searchChange"></el-switch>
           </div>
         </div>
         <div class="rg">
           <div class="switch_item">
             <span>公里桩</span>
-            <el-switch v-model="value4" active-color="#30d8a4" inactive-color="#999999"></el-switch>
+            <el-switch v-model="value4" active-color="#30d8a4" inactive-color="#999999" @change="showHidePiles"></el-switch>
           </div>
         </div>
       </div>
@@ -30,38 +30,47 @@
             :options="orgList"
             :props="{expandTrigger: 'hover'}"
             @change="selectOrgChange"
+            clearable
+            separator="-"
             placeholder="请选择机构">
           </el-cascader>
         </div>
         <div class="select">
           <el-input
-            placeholder="请输入号牌号码"
-            v-model="value6"
-            clearable>
+            placeholder="请输入车号"
+            v-model="card"
+            class="common-focus"
+            @keyup.enter.native="searchByCard">
+            <i 
+              slot="suffix"
+              class="el-input_icon el-icon-search"
+              style="line-height: 30px;margin-right: 2px;cursor: pointer;"
+              @click="searchByCard">
+            </i>
           </el-input>
         </div>
       </div>
       <div class="table_wrap">
         <div class="table_hd">
           <span class="ch">车号</span>
-          <span>|</span>
+          <span class="line"></span>
           <span class="jg">机构</span>
-          <span>|</span>
+          <span class="line"></span>
           <span class="zt">行驶状态</span>
-          <span>|</span>
+          <span class="line"></span>
           <span class="dd">地点</span>
-          <span>|</span>
+          <span class="line"></span>
           <span class="cz">操作</span>
         </div>
         <div class="table_bd">
           <ul>
             <li :class="index === listActive ? 'active' : ''" v-for="(item, index) in currentData" :key="index" @click="focusCar(item, index)">
-              <span class="ch">{{item.carCode}}</span>
-              <span class="jg">{{item.organization}}</span>
-              <span :class="['zt', item.status ? 'green' : 'red']">{{item.status | formatterStatus}}</span>
-              <span class="dd">{{item.address}}</span>
-              <span class="cz">
-                <img src="../../assets/播放.png" alt @click="handleClick(item, index)">
+              <span class="ch ellipsis" :title="item.plateNo">{{item.plateNo}}</span>
+              <span class="jg ellipsis" :title="item.orgName">{{item.orgName}}</span>
+              <span :class="['zt', 'red', 'ellipsis']" :title="item.illegalType">{{item.illegalType}}</span>
+              <span class="dd ellipsis" :title="item.illegalAddr">{{item.illegalAddr}}</span>
+              <span class="cz ellipsis">
+                <img src="../../assets/img/locusImg/play.png" alt @click="handleClick(item, index)">
               </span>
             </li>
           </ul>
@@ -71,12 +80,12 @@
           <el-pagination
             background
             small
-            @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage"
-            :page-size="8"
+            :page-size="5"
             layout="total, prev, pager, next, jumper"
-            :total="400">
+            :total="totalCount"
+            :pager-count="5">
           </el-pagination>
         </div>
       </div>
@@ -86,66 +95,62 @@
         <div class="out">
           轨迹查询
           <div class="export_btn">
-            <img src="../../assets/导出.png" alt>
-            <span>导出</span>
+            <a :href="exportUrl">
+              <img src="../../assets/img/locusImg/export.png" alt>
+              <span>导出</span>
+            </a>
           </div>
         </div>
-        <div class="close_btn" @click="showDetail = false">x</div>
+        <div class="close_btn el-icon-close" @click="showDetail = false"></div>
       </div>
       <div class="lf">
         <div class="mid">
-          <span>浙O1173</span>
-          <span>杭州支队一大队</span>
+          <span>{{activeData.plateNo}}</span>
+          <span class="ellipsis" :title="activeData.orgName" style="width: 135px;">{{activeData.orgName}}</span>
           <div class="timeSelecBox">
-            <dateTime></dateTime>
+            <dateTime :defaultstart="defaultstart" :defaultend="defaultend" v-model="searchTime" @change="dateTimeChange"></dateTime>
           </div>
-          <img src="../../assets/搜索.png" alt>
+          <img src="../../assets/img/locusImg/search.png" @click="getLocusDetail(activeData)" alt>
         </div>
         <div class="cont">
           <div class="cl">
             <div class="c_lf">
               <div>
                 <span>起点终点</span>
-                <p>1555 - 1542</p>
+                <p>-</p>
               </div>
               <div>
                 <span>最大车速</span>
-                <p>155km/h</p>
+                <p>{{locusDetail.gps ? locusDetail.gps.maxSpeed : 0}} km/h</p>
               </div>
               <div>
                 <span>累计停车</span>
-                <p>2次 23分56秒</p>
+                <p>{{locusDetail.gps ? locusDetail.gps.tccs : 0}} 次</p>
               </div>
             </div>
             <div class="c_md">
               <div>
                 <span>里程</span>
-                <p>1555km</p>
+                <p>-</p>
               </div>
               <div>
                 <span>均速</span>
-                <p>155km/h</p>
+                <p>-</p>
               </div>
               <div>
                 <span>超速</span>
-                <p>2次</p>
+                <p>{{locusDetail.overspeedCount || 0}}次</p>
               </div>
             </div>
             <div class="c_rg">
-              <ul>
-                <li>
-                  <span class="tit">违规停车</span>
-                  <span class="ct">2019-5-5 10:20:56 9分12秒 1552</span>
-                </li>
-                <li>
-                  <span class="tit">违规停车</span>
-                  <span class="ct">2019-5-5 10:20:56 9分12秒 1552</span>
-                </li>
-                <li>
-                  <span class="tit">违规停车</span>
-                  <span class="ct">2019-5-5 10:20:56 9分12秒 1552</span>
-                </li>
-              </ul>
+              <el-scrollbar style="height: 100%;">
+                <ul>
+                  <li v-for="(item, index) in locusDetail.wfjcList" :key="index">
+                    <span class="tit">{{item.illegalType}}</span>
+                    <span class="ct">{{item.illegalTime}}&nbsp;&nbsp;&nbsp;{{item.speed}}</span>
+                  </li>
+                </ul>
+              </el-scrollbar>
             </div>
           </div>
         </div>
@@ -154,16 +159,16 @@
         <div class="rl">
           <h6>播放速度</h6>
           <div class="speed">
-            <div class="item" v-for="(item, index) in speedList" :key="index" :class="speedActive === index ? 'active' : ''" @click="speedActive = index">{{item}}</div>
+            <div class="item" v-for="(item, index) in speedList" :key="index" :class="speedActive === index ? 'active' : ''" @click="selectSpeed(index)">{{item}}</div>
           </div>
           <el-progress :text-inside="true" :stroke-width="18" :percentage="50"></el-progress>
           <div class="cz_btn">
-            <div class="item">
-              <img src="../../assets/播放.png" alt>
+            <div class="item" @click="toPlay">
+              <img src="../../assets/img/locusImg/play.png" alt>
               <span>播放</span>
             </div>
-            <div class="item">
-              <img src="../../assets/回放.png" alt>
+            <div class="item" @click="replay">
+              <img src="../../assets/img/locusImg/replay.png" alt>
               <span>回放</span>
             </div>
           </div>
@@ -175,83 +180,56 @@
             <span>简易事故</span>
             <span>检查核录</span>
           </div>
-          <ul>
-            <li>
-              <span>张三（001130）</span>
-              <span>1</span>
-              <span>1</span>
-              <span>1</span>
-            </li>
-            <li>
-              <span>张三（001130）</span>
-              <span>1</span>
-              <span>1</span>
-              <span>1</span>
-            </li>
-            <li>
-              <span>张三（001130）</span>
-              <span>1</span>
-              <span>1</span>
-              <span>1</span>
-            </li>
-          </ul>
+          <div class="policeList">
+            <el-scrollbar style="height: 100%;">
+              <ul>
+                <li v-for="(item, index) in locusDetail.mjList" :key="index">
+                  <span>{{item.xm}}({{item.police}})</span>
+                  <span>{{item.finEmforCementCount.counts}}</span>
+                  <span>{{item.accidentCount.counts}}</span>
+                  <span>{{item.kkjcCount.counts}}</span>
+                </li>
+              </ul>
+            </el-scrollbar>
+          </div>
         </div>
       </div>
+    </div>
+    <div class="playBox" v-if="showPlay">
+      <polylinePlay ref="playDom" :speed="speed" :polylineData="polylineData" @close="showPlay = false"></polylinePlay>
     </div>
   </div>
 </template>
 <script>
-import locusService from "@/api/locusService";
 import dateTime from "@/components/dateTime";
+import polylinePlay from "@/components/polylinePlay";
+import locusService from "@/api/locusService";
 export default {
   name: "current",
   data() {
     return {
-      value1: null,
-      value2: null,
-      value3: null,
-      value4: null,
-      selectOrg: null,
-      value6: null,
+      value1: true,
+      value2: true,
+      value3: true,
+      value4: false,
+      selectOrg: "",
+      card: "",
       value7: null,
-      orgList: [],
       listActive: 0,
       showDetail: false,
       currentPage: 1,
-      currentData: [
-        {
-          carCode: "浙OXXXXX警",
-          organization: "杭州支队一大队",
-          status: 1,
-          address: "山柳县科研路与绿洲路十字路口"
-        },
-        {
-          carCode: "浙OXXXXX警",
-          organization: "杭州支队一大队",
-          status: 0,
-          address: "山柳县科研路与绿洲路十字路口"
-        },
-        {
-          carCode: "浙OXXXXX警",
-          organization: "杭州支队一大队",
-          status: 1,
-          address: "山柳县科研路与绿洲路十字路口"
-        },
-        {
-          carCode: "浙OXXXXX警",
-          organization: "杭州支队一大队",
-          status: 0,
-          address: "山柳县科研路与绿洲路十字路口"
-        },
-        {
-          carCode: "浙OXXXXX警",
-          organization: "杭州支队一大队",
-          status: 1,
-          address: "山柳县科研路与绿洲路十字路口"
-        }
-      ],
+      totalCount: 0,
+      currentData: [],
+      defaultstart: "",
+      defaultend: "",
+      searchTime: "",
+      locusDetail: {},
+      activeData: {},
+      showPlay: false,
       speedList: ["x1", "x2", "x4", "x8", "x16"],
-      speedActive: 0
+      speedActive: 0,
+      speed: 1,
+      polylineData: {}
     };
   },
   filters: {
@@ -265,36 +243,215 @@ export default {
     }
   },
   components: {
-    dateTime
+    dateTime,
+    polylinePlay
+  },
+  computed: {
+    exportUrl() {
+      let timeArr = this.searchTime.split("&");
+      return `${
+        process.env.VUE_APP_url
+      }/tblPoliceCarIllegalInfo/export?startTime=${timeArr[0]}&endTime=${
+        timeArr[1]
+      }&plateNo=${this.activeData.plateNo}`;
+    }
   },
   created() {
-    this.getOrgList();
+    let moment = "2019-08-02";
+    // let moment = this.$moment().format("YYYY-MM-DD");
+    this.filterTime = moment;
+    this.defaultstart = moment + " 00:00:00";
+    this.defaultend = moment + " 23:59:59";
+    this.searchTime = `${this.defaultstart}&${this.defaultend}`;
+    this.getCurrentList();
+  },
+  mounted() {
+    // 监听地图车辆点击
+    this.$eventBus.$on("getLocusInfo", index => {
+      this.showDetail = true;
+      let moment = "2019-08-02";
+      // let moment = this.$moment().format("YYYY-MM-DD");
+      this.filterTime = moment;
+      this.defaultstart = moment + " 00:00:00";
+      this.defaultend = moment + " 23:59:59";
+      this.searchTime = `${this.defaultstart}&${this.defaultend}`;
+      if (this.listActive === index && this.locusDetail.gps) {
+        return false;
+      }
+      this.listActive = index;
+      this.activeData = this.currentData[index];
+      this.getLocusDetail(this.currentData[index]);
+    });
   },
   methods: {
-    // 获取机构列表
-    getOrgList() {
-      locusService.getOrgList().then(res => {
-        console.log(res);
-        this.orgList = res.data || [];
-      });
+    // 搜索改变
+    searchChange() {
+      this.currentPage = 1;
+      this.getCurrentList();
     },
     // 选择机构改变
-    selectOrgChange() {},
+    selectOrgChange() {
+      this.searchChange();
+    },
+    // 根据车号查找
+    searchByCard() {
+      this.searchChange();
+    },
+    // 获取实时列表
+    getCurrentList() {
+      let params = {
+        startRow: (this.currentPage - 1) * 5,
+        endRow: 5
+      };
+      if (this.value1) {
+        params.stopCar = "异常停车";
+      }
+      if (this.value2) {
+        params.crossingPatrol = "越界巡逻";
+      }
+      if (this.value3) {
+        params.speedDing = "超速";
+        params.lowSpeed = "低速";
+      }
+      if (this.card) {
+        params.plateNo = this.card;
+      }
+      if (this.selectOrg[1]) {
+        params.orgCode = this.selectOrg[1];
+      }
+      this.listActive = 0;
+      this.showDetail = false;
+      this.locusDetail = {};
+      locusService.getCurrentList(params).then(res => {
+        console.log(res);
+        if (res.code === "0") {
+          this.currentData = res.data.returnTblPoliceCarIllegalList || [];
+          this.totalCount = res.data.counts || 0;
+          if (res.data.returnTblPoliceCarIllegalList[0]) {
+            this.activeData = res.data.returnTblPoliceCarIllegalList[0];
+            this.$store.commit("setPantoData", [
+              res.data.returnTblPoliceCarIllegalList[0].lon,
+              res.data.returnTblPoliceCarIllegalList[0].lat
+            ]);
+          }
+          let arr = [];
+          this.currentData.forEach(item => {
+            arr.push({
+              title: item.plateNo,
+              point: [item.lon, item.lat]
+            });
+          });
+          this.$store.commit("setLocusData", arr);
+        } else {
+          this.currentData = [];
+          this.totalCount = 0;
+        }
+      });
+    },
+    // 获取轨迹详情
+    getLocusDetail(locusData) {
+      let timeArr = this.searchTime.split("&");
+      let params = {
+        startTime: timeArr[0],
+        endTime: timeArr[1],
+        plateNo: locusData.plateNo,
+        gpsId: locusData.plateNo,
+        jgbm: locusData.orgCode
+      };
+      locusService.getLocusDetail(params).then(res => {
+        console.log(res);
+        if (res.code === "0") {
+          let count = 0;
+          res.data.wfjcList.forEach(item => {
+            if (item.illegalType === "超速") {
+              count++;
+            }
+          });
+          res.data.overspeedCount = count;
+          this.locusDetail = res.data || {};
+          if (res.data.gps) {
+            this.$store.commit("setPolylineData", {
+              center: [locusData.lon, locusData.lat],
+              shiji: res.data.gps.gps || [],
+              lilun: res.data.xlGps.GzfwList || []
+            });
+            this.polylineData = res.data.gps.gps;
+          }
+        } else {
+          this.locusDetail = {};
+        }
+      });
+    },
+    // 页码切换
+    handleCurrentChange(page) {
+      this.currentPage = page;
+      this.getCurrentList();
+    },
     // 定位至车辆
     focusCar(item, index) {
       this.listActive = index;
+      this.activeData = item;
+      this.$store.commit("setPantoData", [item.lon, item.lat]);
     },
     // 显示轨迹详情
     handleClick(item, index) {
-      this.listActive = index;
       this.showDetail = true;
+      let moment = "2019-08-02";
+      // let moment = this.$moment().format("YYYY-MM-DD");
+      this.filterTime = moment;
+      this.defaultstart = moment + " 00:00:00";
+      this.defaultend = moment + " 23:59:59";
+      this.searchTime = `${this.defaultstart}&${this.defaultend}`;
+      if (this.listActive === index && this.locusDetail.gps) {
+        return false;
+      }
+      this.listActive = index;
+      this.getLocusDetail(item);
     },
-    handleSizeChange() {},
-    handleCurrentChange() {}
+    // 查询时间改变
+    dateTimeChange() {},
+    // 选择速度
+    selectSpeed(index) {
+      this.speedActive = index;
+      if (index === 0) {
+        this.speed = 1;
+      } else if (index === 1) {
+        this.speed = 2;
+      } else if (index === 2) {
+        this.speed = 4;
+      } else if (index === 3) {
+        this.speed = 8;
+      } else if (index === 4) {
+        this.speed = 16;
+      }
+    },
+    // 播放
+    toPlay() {
+      this.showPlay = true;
+    },
+    // 回放
+    replay() {
+      this.$refs.playDom.replay();
+    },
+    // 显示/隐藏公里桩
+    showHidePiles(value) {
+      this.$store.commit("setPileShow", value);
+    }
+  },
+  // 页面销毁清空地图车辆标记和轨迹
+  destroyed() {
+    this.$store.commit("setLocusState", true);
   }
 };
 </script>
 <style lang="scss" scoped>
+.playBox {
+  position: absolute;
+  width: 600px;
+  height: 390px;
+  right: -620px;
+  top: 0;
+}
 .home_wrap {
   width: 0;
   height: 0;
@@ -348,7 +505,10 @@ export default {
       justify-content: space-between;
       padding: 0 20px;
       .select {
-        width: 310px;
+        width: 220px;
+        /deep/ input {
+          color: #fc6;
+        }
       }
       /deep/ .el-select {
         width: 100%;
@@ -367,18 +527,26 @@ export default {
     }
   }
   .table_wrap {
-    .ch,
+    .ch {
+      width: 116px;
+      padding: 0 5px;
+    }
     .jg {
-      width: 136px;
+      width: 160px;
+      padding: 0 5px;
     }
     .zt {
-      width: 100px;
+      width: 86px;
+      padding: 0 5px;
     }
     .dd {
       width: 215px;
+      padding: 0 5px;
     }
     .cz {
-      width: 46px;
+      width: 60px;
+      height: 100%;
+      padding: 0 5px;
     }
     .table_hd {
       width: 651px;
@@ -387,6 +555,9 @@ export default {
       border-radius: 4px;
       margin: 10px auto 0;
       line-height: 32px;
+      display: flex;
+      align-items: center;
+      border: 1px solid transparent;
       span {
         font-size: 14px;
         color: #11ebff;
@@ -397,6 +568,13 @@ export default {
         text-shadow: 0px 3px 3px rgba(18, 8, 116, 0.5);
         line-height: 22px;
       }
+      .line {
+        width: 1px;
+        height: 16px;
+        background: #11ebff;
+        display: block;
+        margin: 0 1px;
+      }
     }
     .table_bd {
       margin-bottom: 15px;
@@ -406,25 +584,33 @@ export default {
         margin: 6px auto;
         cursor: pointer;
         border: 1px solid transparent;
+        display: flex;
         span {
           font-size: 14px;
           font-family: "Microsoft YaHei";
           font-weight: 400;
           color: rgba(255, 255, 255, 1);
-          line-height: 30px;
+          line-height: 28px;
           text-shadow: 0px 3px 3px rgba(18, 8, 116, 0.5);
-          display: inline-block;
+          display: block;
           text-align: center;
+          line-height: 28px;
           margin-right: 3px;
-        }
-        img {
-          vertical-align: middle;
+          height: 28px;
+          img {
+            display: block;
+            margin: 0 auto;
+            margin-top: 6px;
+          }
+          &:last-child {
+            margin-right: 0;
+          }
         }
         .green {
           color: green;
         }
         .red {
-          color: red;
+          color: #ff4545;
         }
       }
       li:nth-child(even) {
@@ -453,6 +639,9 @@ export default {
     .pageBox {
       width: 100%;
       padding-left: 20px;
+      display: flex;
+      justify-content: flex-end;
+      padding: 0 20px;
     }
   }
   .detail_wrap {
@@ -512,6 +701,9 @@ export default {
         }
         .timeSelecBox {
           width: 412px;
+          /deep/ .el-input__inner {
+            color: rgba(255, 204, 102, 1);
+          }
         }
         span {
           font-size: 15px;
@@ -543,6 +735,8 @@ export default {
       .cont {
         padding: 0 20px;
         .cl {
+          height: 98px;
+          display: flex;
           margin-top: 20px;
           .c_lf {
             display: inline-block;
@@ -572,6 +766,7 @@ export default {
           .c_md {
             display: inline-block;
             width: 170px;
+            height: 100%;
             > div {
               margin: 8px 0;
               span {
@@ -597,6 +792,7 @@ export default {
           .c_rg {
             display: inline-block;
             width: 300px;
+            height: 100%;
             li {
               margin: 8px 0;
               span {
@@ -620,9 +816,10 @@ export default {
     }
     .rg {
       float: left;
+      display: flex;
       .rl {
         width: 320px;
-        display: inline-block;
+        height: 140px;
         h6 {
           font-size: 14px;
           font-family: "Microsoft YaHei";
@@ -711,8 +908,16 @@ export default {
             }
           }
         }
+        .policeList {
+          width: 100%;
+          height: 124px;
+          overflow: hidden;
+        }
         li {
-          margin-bottom: 15px;
+          margin-bottom: 10px;
+          &:last-child {
+            margin-bottom: 0;
+          }
           span {
             font-size: 14px;
             font-family: "Microsoft YaHei";
@@ -725,6 +930,7 @@ export default {
             text-align: center;
             &:first-child {
               width: 110px;
+              text-align: left;
             }
           }
         }

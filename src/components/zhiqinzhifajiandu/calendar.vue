@@ -5,42 +5,47 @@
       <div class="content">
         <div class="people">
           <div class="pic">
-            <img src="../../assets/img/minjing/p1.png" alt>
+            <img src="../../assets/img/iconImg/p1.png" alt>
           </div>
           <div class="detail">
             <div class="el">
               <i class="ic">
-                <img src="../../assets/img/icon/usrname.png" alt>
+                <img src="../../assets/img/iconImg/icon12.png" alt>
               </i>
-              <span class="infos">张全单</span>
+              <span class="infos">{{policeData.mjxm || "暂无数据"}}</span>
             </div>
             <div class="el">
               <i class="ic">
-                <img src="../../assets/img/icon/carnum.png" alt>
+                <img src="../../assets/img/iconImg/icon13.png" alt>
               </i>
-              <span class="infos">001123</span>
+              <span class="infos">{{policeData.mjjh || "暂无数据"}}</span>
             </div>
             <div class="el">
               <i class="ic">
-                <img src="../../assets/img/icon/flag.png" alt>
+                <img src="../../assets/img/iconImg/icon14.png" alt>
               </i>
-              <span class="infos">杭州支队</span>
+              <span class="infos">{{policeData.bmmc || "暂无数据"}}</span>
             </div>
           </div>
         </div>
         <div class="time">
           <i class="ic">
-            <img src="../../assets/img/icon/time.png" alt>
+            <img src="../../assets/img/iconImg/icon07.png" alt>
           </i>
-          <span class="infos">2011-11-12 02:02:21</span>
+          <span class="infos">{{policeData.occurTime || "暂无数据"}}</span>
         </div>
         <div class="btn">
-          <el-button type="success" size="small">勤务时间处理违法</el-button>
+          <div>非勤务时间处理{{policeData.typeName}}</div>
         </div>
       </div>
     </div>
     <div class="timeSelect">
-      <el-calendar v-model="value"></el-calendar>
+      <Calendar
+        ref="Calendar"
+        @choseDay="clickDay"
+        @changeMonth="changeMonth"
+        :markDate="markArr"
+        :sundayStart="false"></Calendar>
     </div>
     <div class="timeArea">
       <div class="shiduan">
@@ -48,17 +53,12 @@
           <span class="tit">执勤时段</span>
         </div>
         <div class="b">
-          <div class="list-e">
-            <i>1</i>
-            08:00 - 10:00
+          <div v-show="schedulingDetail.length" v-for="(item, index) in schedulingDetail" :key="index" class="list-e">
+            <i>{{index + 1}}.</i>
+            {{item}}
           </div>
-          <div class="list-e">
-            <i>2</i>
-            08:00 - 10:00
-          </div>
-          <div class="list-e">
-            <i>3</i>
-            08:00 - 10:00
+          <div v-show="!schedulingDetail.length" class="list-e">
+            暂无排班！
           </div>
         </div>
       </div>
@@ -67,74 +67,206 @@
 </template>
 
 <script>
+import Calendar from "@/components/vue-calendar/calendar.vue";
+import abnormalDataService from "@/api/abnormalDataService.js";
 export default {
   name: "calendar",
-  components: {},
-  mouted() {},
+  props: {
+    selectDate: {},
+    policeData: {
+      type: Object,
+      default: () => {
+        return {};
+      }
+    }
+  },
+  model: {
+    prop: "selectDate",
+    event: "changeDate"
+  },
   data() {
     return {
-      value: new Date()
+      schedulingData: [],
+      markArr: []
     };
+  },
+  components: {
+    Calendar
+  },
+  watch: {
+    policeData: {
+      immediate: true,
+      handler(newval) {
+        if (newval.mjjh) {
+          this.getSchedulingMsg();
+        } else {
+          this.schedulingData = [];
+          this.markArr = [];
+        }
+      }
+    },
+    selectDate: {
+      immediate: true,
+      handler(newval) {
+        if (newval && newval !== "Invalid date") {
+          this.$nextTick(() => {
+            this.$refs.Calendar.ChoseMonth(newval);
+          });
+        }
+      }
+    }
+  },
+  computed: {
+    // 排班详情
+    schedulingDetail() {
+      let timeStr = "";
+      this.schedulingData.forEach(item => {
+        if (item.dutyDate === this.selectDate) {
+          timeStr = item.dutyTime;
+        }
+      });
+      if (timeStr) {
+        return timeStr.split(",");
+      } else {
+        return [];
+      }
+    }
+  },
+  methods: {
+    // 切换月份
+    toChoseMonth() {
+      this.$nextTick(() => {
+        if (this.selectDate && this.selectDate !== "Invalid date") {
+          this.$refs.Calendar.ChoseMonth(this.selectDate);
+        }
+      });
+    },
+    // 点击选中日期
+    clickDay(date) {
+      let arr = date.split("/");
+      let y = arr[0];
+      let m = arr[1] < 10 ? "0" + arr[1] : arr[1];
+      let d = arr[2] < 10 ? "0" + arr[2] : arr[2];
+      let cdate = `${y}-${m}-${d}`;
+      cdate = this.$moment(cdate).format("YYYY-MM-DD");
+      this.$emit("changeDate", cdate);
+    },
+    // 切换月份
+    changeMonth(date) {
+      let arr = date.split("/");
+      let y = arr[0];
+      let m = arr[1] < 10 ? "0" + arr[1] : arr[1];
+      let d = arr[2] < 10 ? "0" + arr[2] : arr[2];
+      let cdate = `${y}-${m}-${d}`;
+      this.getSchedulingMsg(cdate);
+    },
+    // 获取排班信息
+    getSchedulingMsg(date) {
+      let params = {
+        userId: this.policeData.mjjh,
+        dutyDate: date || this.policeData.occurTime
+      };
+      abnormalDataService.getSchedulingMsg(params).then(res => {
+        console.log(res);
+        if (res.code === "0") {
+          let data = res.data || [];
+          this.schedulingData = data;
+          let arr = [];
+          data.forEach(item => {
+            if (arr.indexOf(item.dutyDate) === -1) {
+              arr.push(item.dutyDate);
+            }
+          });
+          this.markArr = arr;
+        }
+      });
+    }
   }
 };
 </script>
 <style lang="scss"  scoped>
-/deep/ .el-calendar-day {
-  position: relative;
-  text-align: center;
+/deep/ .wh_content_all {
+  background-color: transparent !important;
+  padding-bottom: 0 !important;
 }
-/deep/ .el-calendar-day span {
-  text-align: center;
-  line-height: 52px;
+/deep/ .wh_top_changge {
+  margin-bottom: 8px;
+  li {
+    height: 30px !important;
+  }
 }
-/deep/.calendar-wp .el-button {
-  color: #fff;
-  background: transparent;
-  border: 1px solid #4266af;
-}
-/deep/ .el-calendar-table td.is-selected {
-  background-color: #ff9933;
-}
-/deep/ .el-calendar-table .el-calendar-day:hover {
-  border: 1px solid #fff;
-  background-color: #ff9933;
-}
-/deep/ .el-calendar-table tr td:first-child {
-  border-left: 1px solid #4266af;
-}
-/deep/ .el-calendar-table thead th {
-  color: #fff;
-}
-/deep/ .el-calendar-table tr:first-child td {
-  border-top: 1px solid #4266af;
-}
-/deep/ .el-calendar-table td {
-  color: #fff;
-}
-/deep/ .el-calendar__title {
-  color: #fff;
-}
-/deep/ .el-calendar-table td {
-  border-bottom: 1px solid #4266af;
-  border-right: 1px solid #4266af;
-}
-/deep/ .el-calendar-table thead th {
-  padding: 0 0 11px;
-}
-/deep/ .el-calendar__header {
-  margin: 0 18px;
-  padding: 10px 0px;
-  border-bottom: 1px solid #4266af;
-}
-/deep/ .el-calendar-table .el-calendar-day {
-  height: 44px;
-  padding: 0px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.el-calendar {
-  background-color: transparent;
+/deep/ .wh_content {
+  .wh_content_item {
+    width: 14.285% !important;
+    .wh_item_date {
+      &::before {
+        content: "休";
+        width: 18px;
+        height: 18px;
+        text-align: center;
+        line-height: 18px;
+        font-size: 12px !important;
+        color: #fff;
+        background: #328815;
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+    }
+    .wh_isMark {
+      border-radius: 0;
+      background: transparent;
+      &:before {
+        content: "";
+        width: 0;
+        height: 0;
+      }
+    }
+  }
+  &:last-child {
+    .wh_content_item {
+      border-left: 1px solid #4266af;
+      border-top: 1px solid #4266af;
+      .wh_item_date {
+        width: 100% !important;
+        &:hover {
+          background: #f93;
+        }
+      }
+      .wh_isToday {
+        border-radius: 0;
+        background: transparent;
+      }
+      .wh_chose_day {
+        border-radius: 0;
+        background: #f93;
+      }
+      &:nth-child(7n) {
+        border-right: 1px solid #4266af;
+      }
+      &:nth-last-child(1) {
+        border-bottom: 1px solid #4266af;
+      }
+      &:nth-last-child(2) {
+        border-bottom: 1px solid #4266af;
+      }
+      &:nth-last-child(3) {
+        border-bottom: 1px solid #4266af;
+      }
+      &:nth-last-child(4) {
+        border-bottom: 1px solid #4266af;
+      }
+      &:nth-last-child(5) {
+        border-bottom: 1px solid #4266af;
+      }
+      &:nth-last-child(6) {
+        border-bottom: 1px solid #4266af;
+      }
+      &:nth-last-child(7) {
+        border-bottom: 1px solid #4266af;
+      }
+    }
+  }
 }
 .shiduan {
   background: #29588791;
@@ -165,7 +297,7 @@ export default {
   font-size: 14px;
   line-height: 14px;
   i {
-    margin-right: 6px;
+    margin-right: 10px;
   }
 }
 .dangshiren-pic {
@@ -240,7 +372,7 @@ export default {
   padding: 0 35px 10px;
 }
 .u-bg {
-  background: url("../../assets/img/minjing/ubg.png") no-repeat center;
+  background: url("../../assets/img/iconImg/ubg.png") no-repeat center;
   background-size: 286px 334px !important;
   padding: 70px 35px 30px 35px;
   height: 337px;
@@ -250,9 +382,8 @@ export default {
   height: 100%;
   padding: 20px;
   .police {
-    width: 30%;
+    width: calc(50% - 200px);
     height: 100%;
-    margin-right: 2.25%;
     float: left;
     .title {
       width: 100%;
@@ -260,11 +391,12 @@ export default {
       line-height: 30px;
       font-size: 14px;
       color: #fc6;
+      margin-bottom: 8px;
     }
     .content {
       width: 100%;
       height: calc(100% - 30px);
-      background: url("../../assets/img/minjing/ubg.png") no-repeat center;
+      background: url("../../assets/img/iconImg/ubg.png") no-repeat center;
       background-size: 100% 100%;
       display: flex;
       flex-direction: column;
@@ -275,6 +407,7 @@ export default {
         display: flex;
         justify-content: center;
         margin-bottom: 20px;
+        padding: 0 20px;
         .detail {
           display: flex;
           flex-direction: column;
@@ -284,6 +417,7 @@ export default {
             margin-bottom: 20px;
             &:last-child {
               margin-bottom: 0;
+              align-items: flex-start;
             }
             display: flex;
             align-items: center;
@@ -313,13 +447,26 @@ export default {
       .btn {
         display: flex;
         justify-content: center;
+        div {
+          height: 30px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 4px;
+          background: #ff9933;
+          font-size: 14px;
+          letter-spacing: 2px;
+          padding-left: 12px;
+          padding-right: 10px;
+        }
       }
     }
   }
   .timeSelect {
-    width: 47.5%;
+    width: 410px;
     height: 100%;
-    margin-right: 2.25%;
+    // margin-right: 2.25%;
+    margin: 0 30px;
     float: left;
     /deep/ .el-calendar__header {
       margin: 0;
@@ -342,7 +489,7 @@ export default {
     }
   }
   .timeArea {
-    width: 18%;
+    width: calc(50% - 270px);
     height: 100%;
     float: left;
   }

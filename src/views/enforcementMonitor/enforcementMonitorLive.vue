@@ -1,7 +1,10 @@
 <template>
   <div class="yichangQinwu_wrap">
     <div class="top">
-      <div class="top_lf">执勤执法数据</div>
+      <div class="top_lf">
+        <img src="../../assets/img/iconImg/data.png" alt>
+        执勤执法数据
+      </div>
     </div>
     <div class="content clearfix">
       <div class="c_lf">
@@ -14,6 +17,7 @@
               @change="selectOrgChange"
               placeholder="请选择机构"
               clearable
+              separator="-"
               style="width: 100%;">
             </el-cascader>
           </div>
@@ -21,8 +25,14 @@
             <el-input
               placeholder="请输入民警姓名或警号"
               v-model="police"
-              clearable
-              class="common-focus">
+              class="common-focus"
+              @keyup.enter.native="changeSearch">
+              <i 
+                slot="suffix"
+                class="el-input_icon el-icon-search"
+                style="line-height: 30px;margin-right: 2px;cursor: pointer;"
+                @click="changeSearch">
+              </i>
             </el-input>
           </div>
         </div>
@@ -34,7 +44,7 @@
             <el-collapse v-model="activeName" accordion @change="changes">
               <el-collapse-item title="违法" name="weifa">
                 <tables :tableData="tableData" :tableColumns="tableColumns1" @change="illegalChange"></tables>
-                <div class="pageBox" style="margin-bottom: 15px;padding: 0 20px;">
+                <div class="pageBox">
                   <el-pagination
                     background
                     small
@@ -49,7 +59,7 @@
               </el-collapse-item>
               <el-collapse-item title="事故" name="shigu">
                 <tables :tableData="tableData" :tableColumns="tableColumns2" @change="accidentChange"></tables>
-                <div class="pageBox" style="margin-bottom: 15px;padding: 0 20px;">
+                <div class="pageBox">
                   <el-pagination
                     background
                     small
@@ -64,7 +74,7 @@
               </el-collapse-item>
               <el-collapse-item title="检查核录" name="jiancha">
                 <tables :tableData="tableData" :tableColumns="tableColumns3" @change="checkChange"></tables>
-                <div class="pageBox" style="margin-bottom: 15px;padding: 0 20px;">
+                <div class="pageBox">
                   <el-pagination
                     background
                     small
@@ -95,7 +105,7 @@
             </div>
           </div>
           <div class="c_rg_bot">
-            <illegalcontent :getStyle="icStyle" :detailData="illegalData"></illegalcontent>
+            <illegalcontent :getStyle="icStyle" :detailData="illegalData" :videoData="videoData"></illegalcontent>
           </div>
         </div>
         <div v-if="showtype === 'shigu'" class="shigu_detail">
@@ -108,7 +118,7 @@
             </div>
           </div>
           <div class="c_rg_bot">
-            <shiguxiangqing :getStyle="sgStyle" :detailData="accidentData" :responsibility="responsibility"></shiguxiangqing>
+            <shiguxiangqing :getStyle="sgStyle" :detailData="accidentData" :responsibility="responsibility" :videoData="videoData"></shiguxiangqing>
           </div>
         </div>
         <div v-if="showtype === 'jiancha'" class="jiancha">
@@ -152,12 +162,10 @@ import illegalcontent from "@/components/zhiqinzhifajiandu/illegalcontent";
 //核录内容
 import heluneirong from "@/components/zhiqinzhifajiandu/heluneirong";
 import dateTime from "@/components/dateTime.vue";
-import locusService from "@/api/locusService";
 import enforcementService from "@/api/enforcementService";
 export default {
   data() {
     return {
-      orgList: [],
       selectOrg: [],
       police: "",
       searchTime: "",
@@ -252,7 +260,8 @@ export default {
       responsibility: "",
       currentPage3: 1,
       totalCount3: 0,
-      checkData: {}
+      checkData: {},
+      videoData: []
     };
   },
   created() {
@@ -261,7 +270,6 @@ export default {
     this.defaultstart = moment + " 00:00:00";
     this.defaultend = moment + " 23:59:59";
     this.searchTime = `${this.defaultstart}&${this.defaultend}`;
-    this.getOrgList();
     this.changeSearch();
   },
   components: {
@@ -289,20 +297,14 @@ export default {
         this.getCheckList();
       }
     },
-    // 获取机构列表
-    getOrgList() {
-      locusService.getOrgList().then(res => {
-        this.orgList = res.data || [];
-      });
-    },
     // 查询违法列表
     getIllegalList() {
       let timeArr = this.searchTime.split("&");
       let params = {
         startTime: timeArr[0],
         endTime: timeArr[1],
-        startRow: 10 * (this.currentPage1 - 1) + 1,
-        endRow: 10 * this.currentPage1
+        startRow: 10 * (this.currentPage1 - 1),
+        endRow: 10
       };
       if (this.selectOrg[1]) {
         params.department = this.selectOrg[1];
@@ -313,8 +315,15 @@ export default {
       enforcementService.getIllegalList(params).then(res => {
         if (res.code === "0") {
           this.tableData = res.data.illegal || [];
-          this.totalCount1 = res.data.COUNT || 0;
-          // this.illegalData = res.data.illegal[0] || {};
+          this.totalCount1 = res.data.count || 0;
+          // let data = res.data.illegal;
+          // let arr = [];
+          // data.forEach(item => {
+          //   if (item.type === "2") {
+          //     arr.push(item);
+          //   }
+          // });
+          // this.tableData = arr;
           if (res.data.illegal[0]) {
             let type = res.data.illegal[0].type;
             if (type === "1") {
@@ -338,6 +347,7 @@ export default {
         .then(res => {
           if (res.code === "0") {
             this.illegalData = res.data || {};
+            this.getVideoRecord(res.data);
           }
         });
     },
@@ -350,6 +360,7 @@ export default {
         .then(res => {
           if (res.code === "0") {
             this.illegalData = res.data || {};
+            this.getVideoRecord(res.data);
           }
         });
     },
@@ -361,14 +372,14 @@ export default {
         this.getIllegalDetail2(item.id);
       }
     },
-    // 查询事故列表
+    // 获取事故列表
     getAccidentList() {
       let timeArr = this.searchTime.split("&");
       let params = {
         startTime: timeArr[0],
         endTime: timeArr[1],
-        startRow: 10 * (this.currentPage2 - 1) + 1,
-        endRow: 10 * this.currentPage2
+        startRow: 10 * (this.currentPage2 - 1),
+        endRow: 10
       };
       if (this.selectOrg[1]) {
         params.department = this.selectOrg[1];
@@ -379,9 +390,12 @@ export default {
       enforcementService.getAccidentList(params).then(res => {
         if (res.code === "0") {
           this.tableData = res.data.accident || [];
-          this.totalCount2 = res.data.COUNT || 0;
-          this.accidentData = res.data.accident[0] || {};
-          this.getAccidentDetail(res.data.accident[0].sgbh);
+          this.totalCount2 = res.data.count || 0;
+          if (res.data.accident[0]) {
+            this.accidentData = res.data.accident[0] || {};
+            this.getAccidentDetail(res.data.accident[0].sgbh);
+            this.getVideoRecord(res.data.accident[0]);
+          }
         } else {
           this.tableData = [];
           this.totalCount2 = 0;
@@ -409,15 +423,16 @@ export default {
     accidentChange(item) {
       this.accidentData = item;
       this.getAccidentDetail(item.sgbh);
+      this.getVideoRecord(item);
     },
-    // 查询核录列表
+    // 获取核录列表
     getCheckList() {
       let timeArr = this.searchTime.split("&");
       let params = {
         startTime: timeArr[0],
         endTime: timeArr[1],
-        startRow: 10 * (this.currentPage3 - 1) + 1,
-        endRow: 10 * this.currentPage3
+        startRow: 10 * (this.currentPage3 - 1),
+        endRow: 10
       };
       if (this.selectOrg[1]) {
         params.department = this.selectOrg[1];
@@ -429,9 +444,9 @@ export default {
         console.log(res);
         if (res.code === "0") {
           this.tableData = res.data.kkjc || [];
-          this.totalCount3 = res.data.COUNT || 0;
+          this.totalCount3 = res.data.count || 0;
           if (res.data.kkjc[0]) {
-            this.checkData = res.data.kkjc[0]
+            this.checkData = res.data.kkjc[0];
           }
         }
       });
@@ -468,29 +483,60 @@ export default {
     handleCurrentChange3(page) {
       this.currentPage3 = page;
       this.getCheckList();
+    },
+    // 获取执法记录仪
+    getVideoRecord(item) {
+      let time = item.wfsj || item.sgfssj;
+      let date = new Date(time);
+      let date1 = new Date(date.getTime() - 10 * 60 * 1000);
+      let date2 = new Date(date.getTime() + 10 * 60 * 1000);
+      let startTime = this.$moment(date1).format("YYYY-MM-DD HH:mm:ss");
+      let endTime = this.$moment(date2).format("YYYY-MM-DD HH:mm:ss");
+      enforcementService
+        .getVideoRecord({
+          page: 1,
+          policeno: item.mjjh,
+          starttime: startTime,
+          endtime: endTime,
+          authority: "guangxin"
+        })
+        .then(res => {
+          console.log(res);
+          this.videoData = res.data.data || [];
+        });
     }
   }
 };
 </script>
 <style lang="scss" scoped>
+.pageBox {
+  margin-bottom: 15px;
+  padding: 0 20px;
+  display: flex;
+  justify-content: flex-end;
+}
 .yichangQinwu_wrap {
   height: 100%;
   box-sizing: border-box;
   .top {
     padding: 10px 20px 0 86px;
     .top_lf {
-      display: inline-block;
       color: #ffcc66;
       font-size: 14px;
       font-weight: 400;
-      line-height: 14px;
+      display: flex;
+      align-items: center;
+      img {
+        display: block;
+        margin-right: 10px;
+      }
     }
   }
   .content {
     margin-top: 10px;
     padding-left: 86px;
     padding-right: 20px;
-    height: calc(100% - 96px);
+    height: calc(100% - 98px);
     .c_lf {
       float: left;
       width: 30%;

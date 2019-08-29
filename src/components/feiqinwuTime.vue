@@ -5,68 +5,68 @@
         <h6>违法内容</h6>
         <div class="el" style="padding-left: 20px;">
           <i class="ic">
-            <img src="../assets/img/icon/time.png" alt>处理时间
+            <img src="../assets/img/iconImg/icon07.png" alt>处理时间
           </i>
-          <span class="infos">2019-5-5 05:26</span>
+          <span class="infos">-</span>
         </div>
         <div class="el" style="padding-left: 20px;">
           <i class="ic">
-            <img src="../assets/img/icon/local.png" alt>违法代码
+            <img src="../assets/img/iconImg/icon16.png" alt>违法代码
           </i>
-          <span class="infos">G50沪渝高速K198(主线)</span>
+          <span class="infos">{{detailData.wfxw || "暂无数据"}}</span>
         </div>
         <h6>违法内容</h6>
         <div class="els">
           <div class="el">
             <i class="ic">
-              <img src="../assets/img/icon/haopaihaoma.png" alt>号牌号码
+              <img src="../assets/img/iconImg/icon03.png" alt>号牌号码
             </i>
-            <span class="infos">浙HBC823</span>
+            <span class="infos">{{detailData.hphm || "暂无数据"}}</span>
           </div>
           <div class="el">
             <i class="ic">
-              <img src="../assets/img/icon/common.png" alt>号牌种类
+              <img src="../assets/img/iconImg/icon04.png" alt>号牌种类
             </i>
-            <span class="infos">蓝</span>
+            <span class="infos">{{detailData.hpzl || "暂无数据"}}</span>
           </div>
         </div>
         <div class="els els2">
           <div class="img">
-            <img src="../assets/img/minjing/card-pic.png" alt >
+            <img src="../assets/img/iconImg/card-pic.png" alt >
           </div>
           <div class="el">
             <i class="ic">
-              <img src="../assets/img/icon/carnum.png" alt>车身颜色
+              <img src="../assets/img/iconImg/icon04.png" alt>车身颜色
             </i>
-            <span class="infos">黑</span>
-          </div>
-        </div>
-        <div class="els">
-          <div class="el">
-            <i class="ic">
-              <img src="../assets/img/icon/carstatus.png" alt>车辆状态
-            </i>
-            <span class="infos">无数据</span>
-          </div>
-          <div class="el">
-            <i class="ic">
-              <img src="../assets/img/icon/common.png" alt>车辆类型
-            </i>
-            <span class="infos">小型客车</span>
+            <span class="infos">{{detailData.csys || "暂无数据"}}</span>
           </div>
         </div>
         <div class="els">
           <div class="el">
             <i class="ic">
-              <img src="../assets/img/icon/time.png" alt>年审期限
+              <img src="../assets/img/iconImg/icon02.png" alt>车辆状态
             </i>
-            <span class="infos">2010-3-10</span>
+            <span class="infos">{{detailData.clzt || "暂无数据"}}</span>
           </div>
           <div class="el">
             <i class="ic">
-              <img src="../assets/img/icon/common.png" alt>车辆平台
+              <img src="../assets/img/iconImg/icon04.png" alt>车辆类型
             </i>
-            <span class="infos">奥迪</span>
+            <span class="infos">{{detailData.cllx || "暂无数据"}}</span>
+          </div>
+        </div>
+        <div class="els">
+          <div class="el">
+            <i class="ic">
+              <img src="../assets/img/iconImg/icon07.png" alt>年审期限
+            </i>
+            <span class="infos">{{detailData.yxqz || "暂无数据"}}</span>
+          </div>
+          <div class="el">
+            <i class="ic">
+              <img src="../assets/img/iconImg/icon04.png" alt>车辆品牌
+            </i>
+            <span class="infos">{{detailData.clpp1 || "暂无数据"}}</span>
           </div>
         </div>
       </div>
@@ -76,53 +76,53 @@
       <h6>当事人</h6>
       <div class="rightcontent">
         <div class="image-wrapper">
-          <img src="../assets/img/minjing/p2.png" alt>
+          <img src="../assets/img/iconImg/p2.png" alt>
         </div>
         <div class="p_cont">
           <div class="el">
             <i class="ic">
-              <img src="../assets/img/icon/usrname.png" alt>
+              <img src="../assets/img/iconImg/icon12.png" alt>
             </i>
             <span class="info-label">车辆所有人</span>
-            <span class="infos">赵东东</span>
-            <i class="ic">
+            <span class="infos">{{detailData.dsr || "暂无数据"}}</span>
+            <!-- <i class="ic">
               <img src="../assets/img/icon/girl.png" alt>
-            </i>
+            </i> -->
           </div>
           <div class="el">
             <i class="ic">
-              <img src="../assets/img/icon/idcard.png" alt>
+              <img src="../assets/img/iconImg/icon09.png" alt>
             </i>
-            <span class="info-label">身份证证件号</span>
-            <span class="infos">320223199612031526</span>
+            <span class="info-label">身份证号码</span>
+            <span class="infos">{{detailData.jszh || "暂无数据"}}</span>
           </div>
           <div class="el">
             <i class="ic">
-              <img src="../assets/img/icon/tel2.png" alt>
+              <img src="../assets/img/iconImg/icon08.png" alt>
             </i>
             <span class="info-label">联系方式</span>
-            <span class="infos">321312312</span>
+            <span class="infos">{{detailData.lxfs || "暂无数据"}}</span>
           </div>
           <div class="el">
             <i class="ic">
-              <img src="../assets/img/icon/cardnumber.png" alt>
+              <img src="../assets/img/iconImg/icon01.png" alt>
             </i>
             <span class="info-label">驾驶证档案编号</span>
-            <span class="infos">321312312</span>
+            <span class="infos">{{detailData.dabh || "暂无数据"}}</span>
           </div>
           <div class="el">
             <i class="ic">
-              <img src="../assets/img/icon/haopaihaoma.png" alt>
+              <img src="../assets/img/iconImg/icon13.png" alt>
             </i>
             <span class="info-label">准驾车型</span>
-            <span class="infos">C2</span>
+            <span class="infos">{{detailData.zjcx || "暂无数据"}}</span>
           </div>
           <div class="el">
             <i class="ic">
-              <img src="../assets/img/icon/time.png" alt>
+              <img src="../assets/img/iconImg/icon05.png" alt>
             </i>
-            <span class="info-label">积分情况</span>
-            <span class="infos">0分</span>
+            <span class="info-label">计分情况</span>
+            <span class="infos">{{detailData.kffz || "暂无数据"}}</span>
           </div>
         </div>
       </div>
@@ -133,6 +133,13 @@
 <script>
 export default {
   name: "fqw",
+  props: {
+    detailData: {
+      default: () => {
+        return {};
+      }
+    }
+  },
   components: {},
   data() {
     return {};

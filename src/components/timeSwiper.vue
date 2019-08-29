@@ -3,15 +3,11 @@
         <div class="bg"></div>
         <div class="swiper">
             <swiper :options="swiperOption">
-                <swiper-slide><div class="slide active"><span>2019-4-30 赵西西 2分</span></div></swiper-slide>
-                <swiper-slide><div class="slide"><span>2019-4-30 赵西西 2分</span></div></swiper-slide>
-                <swiper-slide><div class="slide"><span>2019-4-30 赵西西 2分</span></div></swiper-slide>
-                <swiper-slide><div class="slide active"><span>2019-4-30 赵西西 2分</span></div></swiper-slide>
-                <swiper-slide><div class="slide"><span>2019-4-30 赵西西 2分</span></div></swiper-slide>
-                <swiper-slide><div class="slide"><span>2019-4-30 赵西西 2分</span></div></swiper-slide>
-                <swiper-slide><div class="slide active"><span>2019-4-30 赵西西 2分</span></div></swiper-slide>
-                <swiper-slide><div class="slide"><span>2019-4-30 赵西西 2分</span></div></swiper-slide>
-                <swiper-slide><div class="slide"><span>2019-4-30 赵西西 2分</span></div></swiper-slide>
+                <swiper-slide v-for="(item, index) in list" :key="index">
+                  <div :class="['slide', activeIndex === index ? 'active' : '']" @click="changeCar(index)">
+                    <span>{{item.clsj | timeFormatter}} {{item.hphm}} {{item.wfjfs || 0}}分</span>
+                  </div>
+                </swiper-slide>
             </swiper>
             <div class="swiper-button-up swiper-button">
                 <div><i class="el-icon-arrow-up"></i></div>
@@ -25,9 +21,23 @@
 
 <script>
 export default {
+  props: {
+    list: {
+      type: Array,
+      default() {
+        return [];
+      }
+    }
+  },
+  watch: {
+    list() {
+      this.activeIndex = 0;
+    }
+  },
   name: "timeSwiper",
   data() {
     return {
+      activeIndex: 0,
       swiperOption: {
         direction: "vertical",
         navigation: {
@@ -38,15 +48,34 @@ export default {
         spaceBetween: 10
       }
     };
+  },
+  filters: {
+    timeFormatter(time) {
+      return time.split(" ")[0];
+    }
+  },
+  methods: {
+    changeCar(index) {
+      this.activeIndex = index;
+      this.$emit("change", index);
+    }
   }
 };
 </script>
 <style lang="scss" scoped>
+/deep/ .swiper-button-disabled {
+  cursor: not-allowed !important;
+}
 .timeSwiper {
   position: relative;
   .swiper {
     position: relative;
     padding: 50px 0;
+  }
+  .swiper-button-disabled {
+    div {
+      opacity: 0.5;
+    }
   }
   .swiper-button {
     background-image: none;
@@ -56,12 +85,14 @@ export default {
       height: 20px;
       background: #2b4e72;
       border-radius: 50%;
-      cursor: pointer;
       line-height: 20px;
       text-align: center;
       overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       i {
-        color: #b1bfce;
+        color: #fff;
         font-size: 12px;
       }
     }
@@ -81,12 +112,12 @@ export default {
     position: absolute;
     width: 30px;
     height: 370px;
-    background: url("../assets/img/icon/lunbo.png") no-repeat left center;
+    background: url("../assets/img/iconImg/lunbo.png") no-repeat left center;
     background-size: contain;
     left: 50px;
   }
   .slide {
-    width: 180px;
+    width: 196px;
     height: 30px;
     background: linear-gradient(
       -39deg,

@@ -9,7 +9,7 @@
           <el-col :span="24">
             <div class="dangshiren-pic">
               <div class="image-wrapper">
-                <img src="../../assets/img/minjing/p2.png" alt>
+                <img src="../../assets/img/iconImg/p2.png" alt>
               </div>
             </div>
           </el-col>
@@ -18,48 +18,48 @@
       <div class="others">
         <div class="el">
           <i class="ic">
-            <img src="../../assets/img/icon/usrname.png" alt>
+            <img src="../../assets/img/iconImg/icon12.png" alt>
           </i>
           <span class="info-label">当事人</span>
-          <span class="infos" style="flex: none; margin-right: 10px;">{{detailData.dsr}}</span>
+          <span class="infos" style="flex: none; margin-right: 10px;">{{detailData.dsr || "暂无数据"}}</span>
           <!-- <i class="ic">
             <img src="../../assets/img/icon/girl.png" alt>
           </i> -->
         </div>
         <div class="el">
           <i class="ic">
-            <img src="../../assets/img/icon/idcard.png" alt>
+            <img src="../../assets/img/iconImg/icon03.png" alt>
           </i>
           <span class="info-label">身份证号码</span>
-          <span class="infos">{{detailData.jszh}}</span>
+          <span class="infos">{{detailData.jszh || "暂无数据"}}</span>
         </div>
         <div class="el">
           <i class="ic">
-            <img src="../../assets/img/icon/tel2.png" alt>
+            <img src="../../assets/img/iconImg/icon08.png" alt>
           </i>
           <span class="info-label">联系方式</span>
-          <span class="infos">{{detailData.lxfs}}</span>
+          <span class="infos">{{detailData.lxfs || "暂无数据"}}</span>
         </div>
         <div class="el">
           <i class="ic">
-            <img src="../../assets/img/icon/cardnumber.png" alt>
+            <img src="../../assets/img/iconImg/icon01.png" alt>
           </i>
           <span class="info-label">驾驶证档案编号</span>
-          <span class="infos">-</span>
+          <span class="infos">{{detailData.dabh || "暂无数据"}}</span>
         </div>
         <div class="el">
           <i class="ic">
-            <img src="../../assets/img/icon/haopaihaoma.png" alt>
+            <img src="../../assets/img/iconImg/icon13.png" alt>
           </i>
           <span class="info-label">准驾车型</span>
-          <span class="infos">{{detailData.zjcx}}</span>
+          <span class="infos">{{detailData.zjcx || "暂无数据"}}</span>
         </div>
         <div class="el">
           <i class="ic">
-            <img src="../../assets/img/icon/time.png" alt>
+            <img src="../../assets/img/iconImg/icon05.png" alt>
           </i>
-          <span class="info-label">积分情况</span>
-          <span class="infos">-</span>
+          <span class="info-label">计分情况</span>
+          <span class="infos">{{detailData.kffz || "暂无数据"}}</span>
         </div>
       </div>
     </div>

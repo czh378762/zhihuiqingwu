@@ -1,13 +1,13 @@
 <template>
     <div class="zhuapai-wp">
         <i class="ic">
-            <img src="../assets/img/icon/usrname.png" alt="">违法抓拍 
+            <img src="../assets/img/iconImg/icon12.png" alt="">违法抓拍 
         </i>
         <div class="swiper">
             <swiper :options="swiperOption">
-                <swiper-slide><img src="../assets/img/minjing/p3.png" alt=""></swiper-slide>
-                <swiper-slide><img src="../assets/img/minjing/p3.png" alt=""></swiper-slide>
-                <swiper-slide><img src="../assets/img/minjing/p3.png" alt=""></swiper-slide>
+                <swiper-slide><img src="../assets/img/iconImg/p3.png" alt=""></swiper-slide>
+                <swiper-slide><img src="../assets/img/iconImg/p3.png" alt=""></swiper-slide>
+                <swiper-slide><img src="../assets/img/iconImg/p3.png" alt=""></swiper-slide>
             </swiper>
             <div class="swiper-button-prev swiper-button" slot="button-prev">
                 <div><i class="el-icon-arrow-left"></i></div>
@@ -22,6 +22,7 @@
 <script>
 export default {
   name: "zhuapai",
+  props: ["detailData"],
   data() {
     return {
       swiperOption: {
@@ -38,14 +39,15 @@ export default {
 </script>
 <style lang="scss" scoped>
 .zhuapai-wp {
-  margin-top: 20px;
   .ic {
     margin-right: 6px;
     font-size: 13px;
     color: #03d8ea;
     width: 40%;
-    display: inline-block;
+    display: flex;
+    align-items: center;
     img {
+      display: block;
       margin-right: 10px;
     }
   }
@@ -70,6 +72,8 @@ export default {
   }
   .swiper-button {
     background-image: none;
+    top: 50%;
+    margin-top: -22px;
     div {
       width: 40px;
       height: 40px;

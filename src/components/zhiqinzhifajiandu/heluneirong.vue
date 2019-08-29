@@ -1,81 +1,33 @@
 <template>
   <div class="box-wp box_back thin heluneirong b-yellow" v-bind:style="myStyle">
     <div class="box-content">
-      <!-- <el-row>
-        <el-col :span="8">
-          <div class="el">
-            <i class="ic">
-              <img src="../../assets/img/icon/common.png" alt>
-            </i>
-            <span class="info-label">是否为“两客一危”</span>
-            <span class="infos">是</span>
-          </div>
-          <div class="el">
-            <i class="ic">
-              <img src="../../assets/img/icon/common.png" alt>
-            </i>
-            <span class="info-label">荷载</span>
-            <span class="infos">100000kg</span>
-          </div>
-          <div class="el">
-            <i class="ic">
-              <img src="../../assets/img/icon/common.png" alt>
-            </i>
-            <span class="info-label">实载</span>
-            <span class="infos">100000kg</span>
-          </div>
-          <div class="el">
-            <i class="ic">
-              <img src="../../assets/img/icon/common.png" alt>
-            </i>
-            <span class="info-label">本月检查次数</span>
-            <span class="infos">2次</span>
-          </div>
-        </el-col>
-        <el-col :span="16">
-          <div class="el">
-            <div class="pull-left">
-              <i class="ic">
-                <img src="../../assets/img/icon/common.png" alt>
-              </i>
-              <span class="info-label">车辆线路</span>
-            </div>
-            <span class="infos" style="width: 400px;position: relative;top: 7px;">
-              位于泸定县城南面17公里处的杵坭乡，比邻大渡河，平均海拔1310米，
-              年均气温15.5℃，具有冬无严寒、夏无酷暑、日照充足的特点。春赏花、
-              夏避暑、秋品果、冬沐阳，一年四季都是旅游旺季。
-              。
-            </span>
-          </div>
-        </el-col>
-      </el-row>-->
       <div class="detail">
         <p class="title">核录内容</p>
         <div class="content">
           <div class="el">
             <i class="ic">
-              <img src="../../assets/img/icon/common.png" alt>
+              <img src="../../assets/img/iconImg/icon04.png" alt>
             </i>
             <span class="info-label">是否为“两客一危”</span>
             <span class="infos">-</span>
           </div>
           <div class="el">
             <i class="ic">
-              <img src="../../assets/img/icon/common.png" alt>
+              <img src="../../assets/img/iconImg/icon04.png" alt>
             </i>
-            <span class="info-label">核载</span>
-            <span class="infos">-</span>
+            <span class="info-label">荷载</span>
+            <span class="infos">{{detailData.hdzzl || "暂无数据"}}</span>
           </div>
           <div class="el">
             <i class="ic">
-              <img src="../../assets/img/icon/common.png" alt>
+              <img src="../../assets/img/iconImg/icon04.png" alt>
             </i>
             <span class="info-label">实载</span>
             <span class="infos">-</span>
           </div>
           <div class="el">
             <i class="ic">
-              <img src="../../assets/img/icon/common.png" alt>
+              <img src="../../assets/img/iconImg/icon04.png" alt>
             </i>
             <span class="info-label">本月检查次数</span>
             <span class="infos">-</span>
@@ -87,7 +39,7 @@
         <div class="content">
           <div class="el">
             <i class="ic">
-              <img src="../../assets/img/icon/common.png" alt>
+              <img src="../../assets/img/iconImg/icon04.png" alt>
             </i>
             <span class="info-label">车辆路线</span>
             <span class="infos">-</span>

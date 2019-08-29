@@ -8,27 +8,27 @@
         <el-row>
           <el-col :span="10">
             <div class="image-wrapper">
-              <img src="../../assets/img/minjing/p1.png" alt>
+              <img src="../../assets/img/iconImg/p1.png" alt>
             </div>
           </el-col>
           <el-col :span="14" style="padding-top: 8px;">
             <div class="el">
               <i class="ic">
-                <img src="../../assets/img/icon/usrname.png" alt>
+                <img src="../../assets/img/iconImg/icon12.png" alt>
               </i>
-              <span class="infos">{{detailData.mjxm}}</span>
+              <span class="infos">{{detailData.mjxm || "暂无数据"}}</span>
             </div>
             <div class="el">
               <i class="ic">
-                <img src="../../assets/img/icon/carnum.png" alt>
+                <img src="../../assets/img/iconImg/icon13.png" alt>
               </i>
-              <span class="infos">{{detailData.mjjh}}</span>
+              <span class="infos">{{detailData.mjjh || "暂无数据"}}</span>
             </div>
             <div class="el">
               <i class="ic">
-                <img src="../../assets/img/icon/flag.png" alt>
+                <img src="../../assets/img/iconImg/icon14.png" alt>
               </i>
-              <span class="infos">{{detailData.bmmc}}</span>
+              <span class="infos">{{detailData.bmmc || "暂无数据"}}</span>
             </div>
           </el-col>
         </el-row>
@@ -36,35 +36,35 @@
       <div class="others">
         <div class="el">
           <i class="ic">
-            <img src="../../assets/img/icon/time.png" alt>
+            <img src="../../assets/img/iconImg/icon07.png" alt>
           </i>
           <span class="info-label">{{type === 1 ? "违法" : (type === 2 ? "事故" : "核查检录")}}时间</span>
-          <span class="infos">{{type === 1 ? (detailData.wfsj) : (type === 2 ? (detailData.sgfssj) : (detailData.cjsj))}}</span>
+          <span class="infos">{{(type === 1 ? (detailData.wfsj) : (type === 2 ? (detailData.sgfssj) : (detailData.cjsj))) || "暂无数据"}}</span>
         </div>
         <div class="el">
           <i class="ic">
-            <img src="../../assets/img/icon/local.png" alt>
+            <img src="../../assets/img/iconImg/icon06.png" alt>
           </i>
           <span class="info-label">{{type === 1 ? "违法" : (type === 2 ? "事故" : "核查检录")}}地点</span>
-          <span class="infos">{{type === 1 ? (detailData.wzddMs) : (type === 2 ? (detailData.sgddms) : (detailData.jcddMs))}}</span>
+          <span class="infos">{{(type === 1 ? (detailData.wzddMs) : (type === 2 ? (detailData.sgddms) : (detailData.jcddMs))) || "暂无数据"}}</span>
         </div>
         <div class="el">
           <i class="ic">
-            <img src="../../assets/img/icon/time.png" alt>
+            <img src="../../assets/img/iconImg/icon07.png" alt>
           </i>
           <span class="info-label">开单时间</span>
-          <span class="infos">-</span>
+          <span class="infos">{{detailData.cjsj || "暂无数据"}}</span>
         </div>
         <div class="el">
           <i class="ic">
-            <img src="../../assets/img/icon/local.png" alt>
+            <img src="../../assets/img/iconImg/icon06.png" alt>
           </i>
           <span class="info-label">开单地点</span>
-          <span class="infos">-</span>
+          <span class="infos">{{detailData.wzddMs || "暂无数据"}}</span>
         </div>
         <div class="el">
           <i class="ic">
-            <img src="../../assets/img/icon/local.png" alt>
+            <img src="../../assets/img/iconImg/icon06.png" alt>
           </i>
           <span class="info-label">巡逻车号</span>
           <span class="infos">-</span>
@@ -138,6 +138,7 @@ export default {
     flex: 1;
     line-height: 18px;
     align-self: flex-start;
+    overflow: hidden;
   }
   .info-label {
     line-height: 18px;

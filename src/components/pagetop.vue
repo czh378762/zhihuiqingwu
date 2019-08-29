@@ -20,7 +20,7 @@ export default {
   position: fixed;
   width: 100%;
   top: 0;
-  background-image: url("../assets/img/handlebanner/top-bg.png");
+  background-image: url("../assets/img/headerImg/top-bg.png");
   background-position: center;
   background-repeat: no-repeat;
 }

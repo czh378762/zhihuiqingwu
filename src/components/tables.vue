@@ -6,7 +6,10 @@
         <div class="table_bd">
             <ul>
                 <li :class="activeIndex === index ? 'active' : ''" v-for="(item, index) in tableData" :key="index" @click="handleClick(item, index)">
-                    <p class="ellipsis" v-for="(item2, index2) in tableColumns" :key="'index' + index2" :style="{width: item2.width}" :title="item[item2.key]">{{item[item2.key]}}</p>
+                    <p class="ellipsis" v-for="(item2, index2) in tableColumns" :key="'index' + index2" :style="{width: item2.width}">
+                      <span class="ellipsis" :title="getHtmlContent(item2.render(item))" v-if="item2.render" v-html="item2.render(item)"></span>
+                      <span class="ellipsis" :title="item[item2.key]" v-else>{{item[item2.key]}}</span>
+                    </p>
                 </li>
             </ul>
         </div>
@@ -45,6 +48,11 @@ export default {
     handleClick(item, index) {
       this.activeIndex = index;
       this.$emit("change", item);
+    },
+    getHtmlContent(str) {
+      let arr1 = str.split("</");
+      let arr2 = arr1[0].split(">");
+      return arr2[1];
     }
   }
 };
@@ -112,6 +120,17 @@ export default {
         float: left;
         overflow: hidden;
         padding: 0 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        span {
+          display: block;
+          width: 100%;
+          font-size: 14px;
+          font-family: "Microsoft YaHei";
+          font-weight: 400;
+          color: rgba(255, 255, 255, 1);
+        }
       }
     }
     li:nth-child(even) {
@@ -123,7 +142,9 @@ export default {
       border: 1px solid rgba(52, 113, 175, 1);
       border-radius: 4px;
       p {
-        color: rgba(255, 204, 102, 1);
+        span {
+          color: rgba(255, 204, 102, 1);
+        }
       }
     }
   }

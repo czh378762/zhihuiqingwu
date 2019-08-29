@@ -1,88 +1,89 @@
 <template>
   <div class="box-wp box_back thin heluneirong">
     <el-row>
-      <el-col :span="12">
+      <el-col :span="24">
         <div class="box-header">
           <i class="ic">
-            <img src="../../assets/img/minjing/jc.png" alt>
+            <img src="../../assets/img/iconImg/pliceCar.png" alt>
           </i>
           <span class="box-tit">警车</span>
         </div>
       </el-col>
-      <el-col :span="12">
+      <!-- <el-col :span="12">
         <div class="box-header box-header2">
           <i class="ic">
-            <img src="../../assets/img/minjing/jc.png" alt>
+            <img src="../../assets/img/iconImg/pliceCar.png" alt>
           </i>
           <span class="box-tit">驾驶人员</span>
         </div>
-      </el-col>
+      </el-col> -->
     </el-row>
     <div class="box-content">
       <el-row>
-        <el-col :span="12" :offset="1">
+        <el-col :span="24" :offset="1">
           <div class="el">
             <i class="ic">
-              <img src="../../assets/img/icon/time.png" alt>
+              <img src="../../assets/img/iconImg/icon07.png" alt>
             </i>
             <span class="info-label">抓拍时间</span>
-            <span class="infos">2019-5-5 05:26:20</span>
+            <span class="infos">{{detailData.illegalTime || "暂无数据"}}</span>
           </div>
           <div class="el">
             <i class="ic">
-              <img src="../../assets/img/icon/local.png" alt>
+              <img src="../../assets/img/iconImg/icon06.png" alt>
             </i>
             <span class="info-label">抓拍地点</span>
-            <span class="infos">G50沪渝高速K198(主线) 拷贝 2</span>
+            <span class="infos">{{detailData.illegalAddr || "暂无数据"}}</span>
           </div>
           <div class="el">
             <i class="ic">
-              <img src="../../assets/img/icon/common.png" alt>
+              <img src="../../assets/img/iconImg/icon15.png" alt>
             </i>
             <span class="info-label">所属机构</span>
-            <span class="infos">杭州支队</span>
+            <span class="infos">{{detailData.orgCodeName || "暂无数据"}}</span>
           </div>
           <div class="el">
             <i class="ic">
-              <img src="../../assets/img/icon/carnum.png" alt>
+              <img src="../../assets/img/iconImg/icon04.png" alt>
             </i>
             <span class="info-label">巡逻车号</span>
+            <span class="infos">{{detailData.plateNo || "暂无数据"}}</span>
           </div>
           <div class="el" style="margin-bottom: 15px;">
             <div class="image-wrapper carnum-pic">
-              <img src="../../assets/img/minjing/card-pic.png" alt>
+              <img :src="detailData.plateNoImg" alt>
             </div>
           </div>
         </el-col>
-        <el-col :span="12" :offset="3">
+        <!-- <el-col :span="12" :offset="3">
           <el-row style="margin-top:36px; padding-left: 25px;">
             <el-col :span="12">
               <div class="image-wrapper u-pic">
-                <img src="../../assets/img/minjing/p1.png" alt>
+                <img src="../../assets/img/iconImg/p1.png" alt>
               </div>
             </el-col>
             <el-col :span="12">
               <div class="el">
                 <i class="ic">
-                  <img src="../../assets/img/icon/usrname.png" alt>
+                  <img src="../../assets/img/iconImg/icon12.png" alt>
                 </i>
                 <span class="infos">张全单</span>
               </div>
               <div class="el">
                 <i class="ic">
-                  <img src="../../assets/img/icon/carnum.png" alt>
+                  <img src="../../assets/img/iconImg/icon13.png" alt>
                 </i>
                 <span class="infos">001123</span>
               </div>
               <div class="el">
                 <i class="ic">
-                  <img src="../../assets/img/icon/flag.png" alt>
+                  <img src="../../assets/img/iconImg/icon14.png" alt>
                 </i>
                 <span class="infos">杭州支队</span>
               </div>
             </el-col>
           </el-row>
-        </el-col>
+        </el-col> -->
       </el-row>
     </div>
     <div class="div-line"></div>
@@ -90,34 +91,34 @@
       <el-col :span="12">
         <div class="box-header">
           <i class="ic">
-            <img src="../../assets/img/minjing/zp.png" alt>
+            <img src="../../assets/img/iconImg/zp.png" alt>
           </i>
           <span class="box-tit">抓拍</span>
         </div>
       </el-col>
     </el-row>
-    <div class="slide-wp swiper-inner">
+    <div class="slide-wp swiper-inner" v-show="btnShow">
       <div class="swiper-button-prev"></div>
       <div class="swiper-button-next"></div>
       <!-- swiper -->
       <swiper :options="swiperOption">
-        <swiper-slide>
+        <swiper-slide v-for="(item, index) in detailData.carImgUrlList" :key="index">
           <div class="image-wrapper s-pic">
-            <img src="../../assets/img/minjing/p3.png" alt>
-          </div>
-        </swiper-slide>
-        <swiper-slide>
-          <div class="image-wrapper s-pic">
-            <img src="../../assets/img/minjing/p3.png" alt>
-          </div>
-        </swiper-slide>
-        <swiper-slide>
-          <div class="image-wrapper s-pic">
-            <img src="../../assets/img/minjing/p3.png" alt>
+            <img :src="item" alt>
           </div>
         </swiper-slide>
       </swiper>
       <div class="swiper-pagination"></div>
+    </div>
+    <div class="slide-wp swiper-inner" v-show="!btnShow">
+      <!-- swiper -->
+      <swiper :options="swiperOption">
+        <swiper-slide v-for="(item, index) in detailData.carImgUrlList" :key="index">
+          <div class="image-wrapper s-pic">
+            <img :src="item" alt>
+          </div>
+        </swiper-slide>
+      </swiper>
     </div>
   </div>
 </template>
@@ -126,9 +127,18 @@
 export default {
   name: "zhuapai",
   components: {},
+  props: {
+    detailData: {
+      type: Object,
+      default() {
+        return {};
+      }
+    }
+  },
   mouted() {},
   data() {
     return {
+      // swiper配置
       swiperOption: {
         effect: "coverflow",
         grabCursor: true,
@@ -142,7 +152,8 @@ export default {
           slideShadows: true
         },
         pagination: {
-          el: ".swiper-pagination"
+          el: ".swiper-pagination",
+          clickable: true
         },
         navigation: {
           nextEl: ".swiper-button-next",
@@ -150,10 +161,47 @@ export default {
         }
       }
     };
+  },
+  computed: {
+    btnShow() {
+      if (this.detailData.carImgUrlList) {
+        if (this.detailData.carImgUrlList.length > 1) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    }
   }
 };
 </script>
-<style lang="scss"  scoped>
+<style lang="scss" scoped>
+.carnum-pic {
+  display: block;
+  height: 44px;
+  img {
+    width: auto !important;
+    height: 100% !important;
+    display: block;
+  }
+}
+.s-pic {
+  display: block;
+  height: 250px;
+  img {
+    width: auto !important;
+    height: 100% !important;
+    display: block;
+  }
+}
+.swiper-container {
+  cursor: default !important;
+}
+/deep/ .swiper-wrapper {
+  cursor: pointer !important;
+}
 .box-wp {
   padding-top: 15px;
 }
@@ -179,33 +227,30 @@ export default {
 }
 .swiper-button-prev {
   top: 50%;
-  left: 10px;
+  left: 22px;
   width: 50px;
   height: 50px;
   margin-top: -25px;
   background-color: #14334c;
-  background: url("../../assets/img/minjing/la.png") no-repeat center;
+  background: url("../../assets/img/iconImg/la.png") no-repeat center;
 }
 .swiper-button-next {
   top: 50%;
-  right: 10px;
+  right: 22px;
   width: 50px;
   height: 50px;
   margin-top: -25px;
   background-color: #14334c;
-  background: url("../../assets/img/minjing/ra.png") no-repeat center;
-}
-.s-pic {
-  width: 430px;
-  height: 250px;
+  background: url("../../assets/img/iconImg/ra.png") no-repeat center;
 }
 .swiper-inner {
   position: relative;
   width: 100%;
-  padding: 0 30px;
+  padding: 0 47px;
   height: calc(100% - 340px);
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 .swiper-slide {
   background-position: center;

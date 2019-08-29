@@ -11,7 +11,7 @@
             :class="$route.meta.tabActive === ind?'active':''"
             @click="switchTab(item,ind)"
           >
-            <img :src="item.icon">
+            <img :src="$route.meta.tabActive === ind ? item.iconActive: item.icon">
             <span>{{item.title}}</span>
           </li>
         </ul>
@@ -28,23 +28,27 @@ export default {
         {
           title: "现场执法",
           link: "/enforcementMonitor/enforcementMonitorLive",
-          icon: require("../../assets/img/icon/现场执法.png")
+          icon: require("../../assets/img/enforcementImg/enforcement_live.png"),
+          iconActive: require("../../assets/img/enforcementImg/enforcement_live.png")
         },
         {
           title: "安全带",
           link: "/enforcementMonitor/harness",
-          icon: require("../../assets/img/icon/安全带.png")
+          icon: require("../../assets/img/enforcementImg/harness.png"),
+          iconActive: require("../../assets/img/enforcementImg/harness_active.png")
         },
         {
           title: "超速",
           link: "/enforcementMonitor/overSpeed",
-          icon: require("../../assets/img/icon/超速.png")
+          icon: require("../../assets/img/enforcementImg/overspeed.png"),
+          iconActive: require("../../assets/img/enforcementImg/overspeed_active.png")
         },
         {
           title: "现场防护",
           // link: "/enforcementMonitor/protectLive",
           link: "",
-          icon: require("../../assets/img/icon/现场防护.png")
+          icon: require("../../assets/img/enforcementImg/protect_live.png"),
+          iconActive: require("../../assets/img/enforcementImg/protect_live.png")
         }
       ]
     };
@@ -65,7 +69,7 @@ export default {
   left: 90px;
   right: 90px;
   top: 104px;
-  bottom: 62px;
+  bottom: 64px;
   .content_wrap {
     width: 100%;
     height: 100%;
@@ -97,8 +101,8 @@ export default {
       li {
         width: 147px;
         height: 46px;
-        background: url("../../assets/img/handlebanner/异常左侧未选中@3x.png")
-          no-repeat center center;
+        background: url("../../assets/img/enforcementImg/tabBg.png") no-repeat
+          center center;
         margin-bottom: 15px;
         cursor: pointer;
         display: flex;
@@ -122,7 +126,7 @@ export default {
         }
       }
       .active {
-        background: url("../../assets/img/handlebanner/异常左侧选中@3x.png")
+        background: url("../../assets/img/enforcementImg/tabBg_active.png")
           no-repeat center center;
         span {
           color: #fff;

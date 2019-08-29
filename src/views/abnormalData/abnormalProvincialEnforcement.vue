@@ -2,7 +2,7 @@
   <div class="yichangKadian_wrap">
     <div class="top">
       <div class="top_lf">
-        <img src="../../assets/img/icon/执勤执法数据.png" alt>
+        <img src="../../assets/img/iconImg/data.png" alt>
         省际卡点执法异常
       </div>
       <div class="select">
@@ -34,14 +34,14 @@
               <div class="common">
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/haopaihaoma.png" alt>
+                    <img src="../../assets/img/iconImg/icon03.png" alt>
                   </i>
                   <span class="label">号牌号码</span>
                   <span class="infos">-</span>
                 </div>
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/common.png" alt>
+                    <img src="../../assets/img/iconImg/icon04.png" alt>
                   </i>
                   <span class="label">号牌种类</span>
                   <span class="infos">-</span>
@@ -49,11 +49,11 @@
               </div>
               <div class="common2">
                 <div class="img">
-                  <img src="../../assets/img/minjing/card-pic.png" alt >
+                  <img src="../../assets/img/iconImg/card-pic.png" alt >
                 </div>
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/common.png" alt>
+                    <img src="../../assets/img/iconImg/icon04.png" alt>
                   </i>
                   <span class="label">车身颜色</span>
                   <span class="infos">-</span>
@@ -62,14 +62,14 @@
               <div class="common">
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/carstatus.png" alt>
+                    <img src="../../assets/img/iconImg/icon02.png" alt>
                   </i>
                   <span class="label">车辆状态</span>
                   <span class="infos">-</span>
                 </div>
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/common.png" alt>
+                    <img src="../../assets/img/iconImg/icon04.png" alt>
                   </i>
                   <span class="label">车辆类型</span>
                   <span class="infos">-</span>
@@ -78,14 +78,14 @@
               <div class="common">
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/time.png" alt>
+                    <img src="../../assets/img/iconImg/icon07.png" alt>
                   </i>
                   <span class="label">年审期限</span>
                   <span class="infos">-</span>
                 </div>
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/common.png" alt>
+                    <img src="../../assets/img/iconImg/icon04.png" alt>
                   </i>
                   <span class="label">车辆品牌</span>
                   <span class="infos">-</span>
@@ -94,7 +94,7 @@
               <div class="common3">
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/usrname.png" alt>
+                    <img src="../../assets/img/iconImg/icon12.png" alt>
                   </i>
                   <span class="label">车辆所有人</span>
                   <span class="infos">-</span>
@@ -103,7 +103,7 @@
               <div class="common3">
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/idcard.png" alt>
+                    <img src="../../assets/img/iconImg/icon09.png" alt>
                   </i>
                   <span class="label">身份证号码</span>
                   <span class="infos">-</span>
@@ -112,7 +112,7 @@
               <div class="common3">
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/tel.png" alt>
+                    <img src="../../assets/img/iconImg/icon10.png" alt>
                   </i>
                   <span class="label">手机号码</span>
                   <span class="infos">-</span>
@@ -121,7 +121,7 @@
               <div class="common3">
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/tel2.png" alt>
+                    <img src="../../assets/img/iconImg/icon08.png" alt>
                   </i>
                   <span class="label">联系方式</span>
                   <span class="infos">-</span>
@@ -133,13 +133,13 @@
             <p class="title">当事车辆</p>
             <div class="pContent">
               <div class="img">
-                <img src="../../assets/img/minjing/p2.png" alt="">
+                <img src="../../assets/img/iconImg/p2.png" alt="">
               </div>
               <div class="infoBox">
                 <div class="common">
                   <div class="el">
                     <i class="ic">
-                      <img src="../../assets/img/icon/usrname.png" alt>
+                      <img src="../../assets/img/iconImg/icon12.png" alt>
                     </i>
                     <span class="label">当事人</span>
                     <span class="infos">-</span>
@@ -148,7 +148,7 @@
                 <div class="common">
                   <div class="el">
                     <i class="ic">
-                      <img src="../../assets/img/icon/idcard.png" alt>
+                      <img src="../../assets/img/iconImg/icon09.png" alt>
                     </i>
                     <span class="label">身份证号码</span>
                     <span class="infos">-</span>
@@ -157,7 +157,7 @@
                 <div class="common">
                   <div class="el">
                     <i class="ic">
-                      <img src="../../assets/img/icon/tel2.png" alt>
+                      <img src="../../assets/img/iconImg/icon08.png" alt>
                     </i>
                     <span class="label">联系方式</span>
                     <span class="infos">-</span>
@@ -166,7 +166,7 @@
                 <div class="common">
                   <div class="el">
                     <i class="ic">
-                      <img src="../../assets/img/icon/cardnumber.png" alt>
+                      <img src="../../assets/img/iconImg/icon01.png" alt>
                     </i>
                     <span class="label">驾驶证档案编号</span>
                     <span class="infos">-</span>
@@ -175,7 +175,7 @@
                 <div class="common">
                   <div class="el">
                     <i class="ic">
-                      <img src="../../assets/img/icon/carnum.png" alt>
+                      <img src="../../assets/img/iconImg/icon13.png" alt>
                     </i>
                     <span class="label">准驾车型</span>
                     <span class="infos">-</span>
@@ -184,7 +184,7 @@
                 <div class="common">
                   <div class="el">
                     <i class="ic">
-                      <img src="../../assets/img/icon/time.png" alt>
+                      <img src="../../assets/img/iconImg/icon07.png" alt>
                     </i>
                     <span class="label">计分情况</span>
                     <span class="infos">-</span>
@@ -201,7 +201,7 @@
               <div class="common">
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/time.png" alt>
+                    <img src="../../assets/img/iconImg/icon07.png" alt>
                   </i>
                   <span class="label">处理时间</span>
                   <span class="infos">-</span>
@@ -210,7 +210,7 @@
               <div class="common">
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/local.png" alt>
+                    <img src="../../assets/img/iconImg/icon06.png" alt>
                   </i>
                   <span class="label">处理地点</span>
                   <span class="infos">-</span>
@@ -224,7 +224,7 @@
               <div class="common">
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/common.png" alt>
+                    <img src="../../assets/img/iconImg/icon04.png" alt>
                   </i>
                   <span class="label">违法代码</span>
                   <span class="infos">-</span>
@@ -233,7 +233,7 @@
               <div class="common">
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/common.png" alt>
+                    <img src="../../assets/img/iconImg/icon04.png" alt>
                   </i>
                   <span class="label">违法类别</span>
                   <span class="infos">-</span>
@@ -242,7 +242,7 @@
               <div class="common">
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/time.png" alt>
+                    <img src="../../assets/img/iconImg/icon07.png" alt>
                   </i>
                   <span class="label">违法时间</span>
                   <span class="infos">-</span>
@@ -251,7 +251,7 @@
               <div class="common">
                 <div class="el">
                   <i class="ic">
-                    <img src="../../assets/img/icon/local.png" alt>
+                    <img src="../../assets/img/iconImg/icon06.png" alt>
                   </i>
                   <span class="label">违法地点</span>
                   <span class="infos">-</span>
@@ -261,108 +261,125 @@
           </div>
         </div>
       </div>
-      <div class="c_rg" v-show="showTab === '2'">
-        <div class="box-content">
-          <div class="clearfix">
-            <h6>当事车辆</h6>
-            <el-row style="margin-left:50px">
-              <el-col>
-                <div class="el">
-                  <i class="ic">
-                    <img src="../../assets/img/icon/usrname.png" alt>号牌号码
-                  </i>
-                  <span class="infos">浙HBC823</span>
-                  <img
-                    style="width:138px;height:27px;margin:10px 0 0 30px;"
-                    src="../../assets/img/minjing/card-pic.png"
-                    alt
-                  >
-                </div>
-                <div class="el">
-                  <i class="ic">
-                    <img src="../../assets/img/icon/usrname.png" alt>车辆状态
-                  </i>
-                  <span class="infos">无数据</span>
-                </div>
-                <div class="el">
-                  <i class="ic">
-                    <img src="../../assets/img/icon/tel2.png" alt>年审期限
-                  </i>
-                  <span class="infos">2010-3-10</span>
-                </div>
-              </el-col>
-              <el-col>
-                <div class="el">
-                  <i class="ic">
-                    <img src="../../assets/img/icon/cardnumber.png" alt>号牌种类
-                  </i>
-                  <span class="infos">蓝</span>
-                </div>
-                <div class="el">
-                  <i class="ic">
-                    <img src="../../assets/img/icon/carnum.png" alt>车身颜色
-                  </i>
-                  <span class="infos">黑</span>
-                </div>
-                <div class="el">
-                  <i class="ic">
-                    <img src="../../assets/img/icon/time.png" alt>车辆类型
-                  </i>
-                  <span class="infos">小型客车</span>
-                </div>
-                <div class="el">
-                  <i class="ic">
-                    <img src="../../assets/img/icon/time.png" alt>车辆平台
-                  </i>
-                  <span class="infos">奥迪</span>
-                </div>
-              </el-col>
-            </el-row>
-            <el-row style="margin-left:50px;margin-top:40px;">
-              <el-col :span="7">
-                <div class="el">
-                  <i class="ic">
-                    <img src="../../assets/img/icon/usrname.png" alt>车辆所有人
-                  </i>
-                  <span class="infos">无数据</span>
-                </div>
-                <div class="el">
-                  <i class="ic">
-                    <img src="../../assets/img/icon/tel2.png" alt>身份证证件号
-                  </i>
-                  <span class="infos">320223199612031526</span>
-                </div>
-                <div class="el">
-                  <i class="ic">
-                    <img src="../../assets/img/icon/tel2.png" alt>手机号码
-                  </i>
-                  <span class="infos">135****5631</span>
-                </div>
-                <div class="el">
-                  <i class="ic">
-                    <img src="../../assets/img/icon/tel2.png" alt>联系方式
-                  </i>
-                  <span class="infos">0574****5835</span>
-                </div>
-              </el-col>
-            </el-row>
-            <h6 style="margin-top:50px;">报警</h6>
-            <el-row style="margin-left:50px;margin-top:40px;">
-              <el-col :span="7">
-                <div class="el">
-                  <i class="ic">
-                    <img src="../../assets/img/icon/tel2.png" alt>报警地点
-                  </i>
-                  <span class="infos">G50沪渝高速K198(主线)</span>
-                </div>
-                <div class="el">
-                  <i class="ic">
-                    <img src="../../assets/img/icon/tel2.png" alt>报警类型
-                  </i>
-                  <span class="infos">XXXXXXXXXX</span>
-                </div>
-              </el-col>
-            </el-row>
+      <div class="detail_right2" v-show="showTab === '2'">
+        <p class="title">当事车辆</p>
+        <div class="carContent">
+          <div class="common">
+            <div class="el">
+              <i class="ic">
+                <img src="../../assets/img/iconImg/icon03.png" alt>
+              </i>
+              <span class="label">号牌号码</span>
+              <span class="infos">-</span>
+            </div>
+            <div class="el">
+              <i class="ic">
+                <img src="../../assets/img/iconImg/icon04.png" alt>
+              </i>
+              <span class="label">号牌种类</span>
+              <span class="infos">-</span>
+            </div>
+          </div>
+          <div class="common2">
+            <div class="img">
+              <img src="../../assets/img/iconImg/card-pic.png" alt >
+            </div>
+            <div class="el">
+              <i class="ic">
+                <img src="../../assets/img/iconImg/icon04.png" alt>
+              </i>
+              <span class="label">车身颜色</span>
+              <span class="infos">-</span>
+            </div>
+          </div>
+          <div class="common">
+            <div class="el">
+              <i class="ic">
+                <img src="../../assets/img/iconImg/icon02.png" alt>
+              </i>
+              <span class="label">车辆状态</span>
+              <span class="infos">-</span>
+            </div>
+            <div class="el">
+              <i class="ic">
+                <img src="../../assets/img/iconImg/icon04.png" alt>
+              </i>
+              <span class="label">车辆类型</span>
+              <span class="infos">-</span>
+            </div>
+          </div>
+          <div class="common" style="margin-bottom: 40px;">
+            <div class="el">
+              <i class="ic">
+                <img src="../../assets/img/iconImg/icon07.png" alt>
+              </i>
+              <span class="label">年审期限</span>
+              <span class="infos">-</span>
+            </div>
+            <div class="el">
+              <i class="ic">
+                <img src="../../assets/img/iconImg/icon04.png" alt>
+              </i>
+              <span class="label">车辆品牌</span>
+              <span class="infos">-</span>
+            </div>
+          </div>
+          <div class="common">
+            <div class="el">
+              <i class="ic">
+                <img src="../../assets/img/iconImg/icon12.png" alt>
+              </i>
+              <span class="label">车辆所有人</span>
+              <span class="infos">-</span>
+            </div>
+          </div>
+          <div class="common">
+            <div class="el">
+              <i class="ic">
+                <img src="../../assets/img/iconImg/icon09.png" alt>
+              </i>
+              <span class="label">身份证号码</span>
+              <span class="infos">-</span>
+            </div>
+          </div>
+          <div class="common">
+            <div class="el">
+              <i class="ic">
+                <img src="../../assets/img/iconImg/icon10.png" alt>
+              </i>
+              <span class="label">手机号码</span>
+              <span class="infos">-</span>
+            </div>
+          </div>
+          <div class="common">
+            <div class="el">
+              <i class="ic">
+                <img src="../../assets/img/iconImg/icon08.png" alt>
+              </i>
+              <span class="label">联系方式</span>
+              <span class="infos">-</span>
+            </div>
+          </div>
+        </div>
+        <p class="title">报警</p>
+        <div class="policeContent">
+          <div class="common">
+            <div class="el">
+              <i class="ic">
+                <img src="../../assets/img/iconImg/icon17.png" alt>
+              </i>
+              <span class="label">报警地点</span>
+              <span class="infos">G50沪渝高速K198(主线)</span>
+            </div>
+          </div>
+          <div class="common">
+            <div class="el">
+              <i class="ic">
+                <img src="../../assets/img/iconImg/icon18.png" alt>
+              </i>
+              <span class="label">报警类型</span>
+              <span class="infos">XXXXXXXXXX</span>
+            </div>
           </div>
         </div>
       </div>
@@ -376,8 +393,8 @@ export default {
   name: "abnormalProvincialEnforcement",
   data() {
     return {
-      tabName: "1",
-      showTab: "1",
+      tabName: "2",
+      showTab: "2",
       value: null,
       options: [{ value: "123", label: "123" }]
     };
@@ -401,13 +418,19 @@ export default {
   height: 100%;
   box-sizing: border-box;
   .top {
-    padding: 30px 0 0 86;
+    padding: 10px 20px 0 86px;
+    display: flex;
     .top_lf {
-      display: inline-block;
       width: 13%;
       color: #ffcc66;
       font-size: 14px;
       font-weight: 400;
+      display: flex;
+      align-items: center;
+      img {
+        display: block;
+        margin-right: 10px;
+      }
     }
     .select {
       display: inline-block;
@@ -432,7 +455,7 @@ export default {
     margin-top: 10px;
     padding-left: 86px;
     padding-right: 20px;
-    height: 85%;
+    height: calc(100% - 112px);
     .c_lf {
       float: left;
       width: 30%;
@@ -518,6 +541,7 @@ export default {
                   line-height: 18px;
                   color: #03d8ea;
                   margin: 0 20px 0 10px;
+                  width: 66px;
                 }
                 .infos {
                   font-size: 13px;
@@ -585,9 +609,10 @@ export default {
               width: 100%;
               height: calc(100% - 127px);
               display: flex;
-              justify-content: space-between;
+              justify-content: space-around;
               flex-direction: column;
               align-items: center;
+              margin-top: 15px;
               .common {
                 width: 180px;
                 display: flex;
@@ -605,7 +630,7 @@ export default {
                     line-height: 18px;
                     color: #03d8ea;
                     margin: 0 60px 0 10px;
-                    width: 66px;
+                    width: 92px;
                   }
                   .infos {
                     font-size: 13px;
@@ -712,6 +737,145 @@ export default {
                   flex: 1;
                 }
               }
+            }
+          }
+        }
+      }
+    }
+    .detail_right2 {
+      width: calc(70% - 20px);
+      height: 100%;
+      float: left;
+      border: 1px solid #4266af;
+      border-radius: 4px;
+      padding: 20px 32px;
+      .title {
+        width: 100%;
+        height: 14px;
+        font-size: 14px;
+        color: #fc6;
+        line-height: 14px;
+        margin-bottom: 20px;
+      }
+      .carContent {
+        width: 60%;
+        padding-left: 45px;
+        margin-bottom: 60px;
+        .common {
+          width: 100%;
+          display: flex;
+          margin-bottom: 20px;
+          &:last-child {
+            margin-bottom: 0;
+          }
+          .el {
+            width: 50%;
+            display: flex;
+            img {
+              display: block;
+            }
+            .label {
+              width: 66px;
+              font-size: 13px;
+              line-height: 18px;
+              color: #03d8ea;
+              margin: 0 20px 0 10px;
+            }
+            .infos {
+              font-size: 13px;
+              line-height: 18px;
+              color: #fff;
+              flex: 1;
+            }
+          }
+        }
+        .common2 {
+          width: 100%;
+          display: flex;
+          margin-bottom: 20px;
+          .img {
+            width: 50%;
+            height: 27px;
+            padding-left: 28px;
+            img {
+              display: block;
+            }
+          }
+          .el {
+            width: 50%;
+            height: 27px;
+            align-items: center;
+            display: flex;
+            .label {
+              width: 66px;
+              font-size: 13px;
+              line-height: 18px;
+              color: #03d8ea;
+              margin: 0 20px 0 10px;
+            }
+            .infos {
+              font-size: 13px;
+              line-height: 18px;
+              color: #fff;
+              flex: 1;
+            }
+          }
+        }
+        .common3 {
+          width: 100%;
+          display: flex;
+          &:last-child {
+            margin-bottom: 0;
+          }
+          .el {
+            flex: 1;
+            display: flex;
+            img {
+              display: block;
+            }
+            .label {
+              font-size: 13px;
+              line-height: 18px;
+              color: #03d8ea;
+              margin: 0 20px 0 10px;
+            }
+            .infos {
+              font-size: 13px;
+              line-height: 18px;
+              color: #fff;
+              flex: 1;
+            }
+          }
+        }
+      }
+      .policeContent {
+        width: 100%;
+        padding-left: 45px;
+        .common {
+          width: 100%;
+          display: flex;
+          margin-bottom: 20px;
+          &:last-child {
+            margin-bottom: 0;
+          }
+          .el {
+            width: 50%;
+            display: flex;
+            img {
+              display: block;
+            }
+            .label {
+              width: 66px;
+              font-size: 13px;
+              line-height: 18px;
+              color: #ff5460;
+              margin: 0 20px 0 10px;
+            }
+            .infos {
+              font-size: 13px;
+              line-height: 18px;
+              color: #ff5460;
+              flex: 1;
             }
           }
         }

@@ -2,11 +2,11 @@
   <div class="home_wrap">
     <div class="home_tab">
       <div :class="['tab', $route.meta.tabActive === 0 ? 'active' : '']" @click="changeTab(0)">
-        <img src="../../assets/实时.png" alt>
+        <img :src="$route.meta.tabActive === 0 ? currentActive : currentImg" alt>
         <span>实时</span>
       </div>
       <div :class="['tab', $route.meta.tabActive === 1 ? 'active' : '']" @click="changeTab(1)">
-        <img src="../../assets/轨迹.png" alt>
+        <img :src="$route.meta.tabActive === 1 ? locusActive : locusImg" alt>
         <span>轨迹</span>
       </div>
     </div>
@@ -14,10 +14,19 @@
   </div>
 </template>
 <script>
+import currentImg from "@/assets/img/locusImg/current.png";
+import currentActive from "@/assets/img/locusImg/current_active.png";
+import locusImg from "@/assets/img/locusImg/locus.png";
+import locusActive from "@/assets/img/locusImg/locus_active.png";
 export default {
   name: "locusMonitor",
   data() {
-    return {};
+    return {
+      currentImg: currentImg,
+      currentActive: currentActive,
+      locusImg: locusImg,
+      locusActive: locusActive
+    };
   },
   methods: {
     changeTab(value) {
@@ -39,17 +48,16 @@ export default {
     position: fixed;
     left: 30px;
     top: 100px;
-    width: 267px;
+    width: 270px;
     height: 46px;
-    background: url("../../assets/img/handlebanner/默认背景@3x.png") no-repeat
-      left center;
+    background: url("../../assets/img/locusImg/tabBg.png") no-repeat center
+      center;
     .tab {
       cursor: pointer;
-      width: 133px;
+      width: 135px;
       display: inline-block;
       text-align: center;
-      background: url("../../assets/img/handlebanner/未选中@3x.png") no-repeat
-        center 8px;
+      background: url("../../assets/img/locusImg/tabBg2.png") no-repeat 8px 5px;
       img {
         vertical-align: middle;
       }
@@ -61,8 +69,9 @@ export default {
       }
     }
     .active {
-      background: url("../../assets/img/handlebanner/选中背景@3x.png") no-repeat
+      background: url("../../assets/img/locusImg/tabBg_active.png") no-repeat
         center center;
+      background-size: 100% 100%;
       span {
         color: #ffffff;
       }

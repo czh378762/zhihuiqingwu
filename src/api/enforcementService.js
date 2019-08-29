@@ -61,4 +61,31 @@ enforcementService.getCheckList = params => {
   });
 };
 
+// 获取执法记录仪
+enforcementService.getVideoRecord = params => {
+  return service({
+    method: "post",
+    url: "/FoundVido/fileList",
+    data: QS.stringify(params)
+  });
+};
+
+// 获取安全带列表
+enforcementService.getHarnessList = params => {
+  return service({
+    method: "post",
+    url: "/safetyBelt/findSafetyBelt",
+    data: QS.stringify(params)
+  });
+};
+
+// 获取超速列表
+enforcementService.getOverspeedList = params => {
+  return service({
+    method: "post",
+    url: "/speed/findSpeedPage",
+    data: QS.stringify(params)
+  });
+};
+
 export default enforcementService;

@@ -12,6 +12,9 @@ module.exports = {
     parser: "babel-eslint"
   },
   globals: {
-    BMap: true
+    BMap: true,
+    BMapLib: true,
+    BMAP_ANIMATION_DROP: true,
+    defaultIcon: true
   }
 };
